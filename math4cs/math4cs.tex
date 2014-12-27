@@ -1,0 +1,79 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% This is LaTeX file for Solutions of Homework Assignment 4
+% Author: Shuo Yang
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,epsfig,graphics,hyperref,amsthm}
+
+\hypersetup{colorlinks=true}
+
+\setlength{\textwidth}{7in}
+\setlength{\topmargin}{-0.575in}
+\setlength{\textheight}{9.25in}
+\setlength{\oddsidemargin}{-.25in}
+\setlength{\evensidemargin}{-.25in}
+
+\reversemarginpar
+\setlength{\marginparsep}{-15mm}
+
+\newcommand{\rmv}[1]{}
+\newcommand{\bemph}[1]{{\bfseries\itshape#1}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\imply}{\to}
+\newcommand{\bic}{\leftrightarrow}
+
+% Some user defined strings for the homework assignment
+%
+\def\CourseCode{Math4CS}
+\def\DateHandedOut{Dec, 2014}
+\def\DateDue{Dec 26}
+\def\Author{Shuo Yang}
+
+\begin{document}
+
+\noindent
+
+\CourseCode \hfill \DateHandedOut
+
+\begin{center}
+Induction I\\
+Date: \DateDue\\
+Student: \Author\\
+\end{center}
+
+% A horizontal split line
+\hrule\smallskip
+
+% Enumerate through all questions.
+\begin{enumerate}
+
+\item Courtyard Tiling\\
+  The problem is to tile a courtyard with dimensions $2^n \times
+  2^n$. We are required to install a statue of a wealthy donor in one
+  of the central square, and only special L-shaped tiles can be
+  used. We need to prove this is feasible.
+  
+  \textbf{Theorem} For all $n \geq 0$ there exists a tiling of a $2^n
+  \times 2^n$ courtyard with the donor in a central square. 
+  \begin{proof}
+    Prove by induction. Let $P(n)$ be the proposition that there
+    exists a tiling of a $2^n \times 2^n$ courtyard with the donor
+    placed in any location.
+
+  \emph{Base case}: $P(0)$ is true because the donor fills the whole
+  courtyard.
+
+  \emph{Inductive step}: Suppose $P(n)$ is true, we need to prove that
+  $P(n) \rightarrow P(n+1)$. A $2^{n+1} \times 2^{n+1}$ courtyard
+  consists of four $2^n \times 2^n$ quadrants, each of them can be tiled
+  with the donor placed in any location. Let the donor be in one of
+  the four central squares, and the remaining three central squares
+  can fit a L-shaped tile. Now we can tile each of the four quadrants
+  by the induction hypothesis. This proves that $P(n) \rightarrow
+  P(n+1)$. The theorem follows as a special case.
+  \end{proof}
+
+\end{enumerate}
+\end{document}
