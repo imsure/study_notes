@@ -85,7 +85,7 @@ Student: \Author\\
 \begin{enumerate}
   \item 
     \textbf{Theorem}. Every graph $G=(V,E)$ has at least $|V|-|E|$
-    connected components. \\
+    connected components.
     \begin{proof}
       We use induction on the number of edges. Let $P(n)$ be the
       proposition that every graph $G=(V,E)$ has at least $|V|-n$
@@ -109,6 +109,34 @@ Student: \Author\\
       of connected components in $G$ is at least $|V|-n-1=|V|-(n+1)$.
 
       The theorem follows by induction. 
+    \end{proof}
+
+  \item
+    \textbf{Theorem}. Let $G$ be a digraph(possible with self-loops)
+    with vertices $v_1, \cdots, v_n$. Let $M$ be the adjacency matrix
+    of $G$. Then $M_{ij}^k$ is equal to the number of length-$k$ walk
+    from $v_i$ to $v_j$.
+    \begin{proof}
+      We use induction on $k$. Let $P(k)$ be the proposition that the
+      number of length-$k$ walk from $v_i$ to $v_j$ is $M_{ij}^k$, for
+      all $i,j$. 
+
+      \emph{Base case:} for $k=0$, a vertex only has length-$0$ walk
+      to itself. Since $M^0$ is the identity matrix, $P(0)$ holds. 
+
+      \emph{Inductive step:} Assume $P(k)$ holds, we will prove that
+      $M_{ij}^{k+1}$ is equal to the number of length-$(k+1)$ walk
+      from $v_i$ to $v_j$. A length-$(k+1)$ walk from $v_i$ to $v_j$
+      consists of a walk of length-$k$ from $v_i$ to some intermediate
+      vertex $v_m$ followed by an edge $(v_m, v_j)$. Therefore, the
+      number of $M_{ij}^{k+1}$ is equal to:
+
+      \begin{equation}
+        M_{iv_1}^{k}M_{v_1j} + M_{iv_2}^{k}M_{v_2j} + \cdots +
+        M_{iv_n}^{k}M_{v_nj} 
+      \end{equation}
+      This is exactly $M_{ij}^{k+1}$, thus $P(k+1)$ also holds. The
+      theorem follows by induction.
     \end{proof}
 \end{enumerate}
 
