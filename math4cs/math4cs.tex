@@ -138,6 +138,64 @@ Student: \Author\\
       This is exactly $M_{ij}^{k+1}$, thus $P(k+1)$ also holds. The
       theorem follows by induction.
     \end{proof}
+
+  \item
+    \textbf{Theorem}. Every tree $T=(V,E)$ has the following
+    properties:
+    \begin{enumerate}
+    \item There is a unique path between every pair of vertices.
+      \begin{proof}
+        There is at least one path between every pair of vertices
+        since the graph is connected. Suppose that there are two
+        different paths between vertices $u$ and $v$. Beginning at
+        $u$, let $x$ be the first vertex where paths diverge, and let
+        $y$ be the next vertex they share. Then there are two paths
+        between $x$ and $y$ with no common edges, which creates a
+        cycle. This is a contradiction since the graph is
+        acyclic. Therefore there is exactly one path between every
+        pair of vertices.
+      \end{proof}
+    \item Adding any edge creates a cycle.
+      \begin{proof}
+        Suppose an edge was added between vertices $u$ and $v$. Since
+        there is already a path between $u$ and $v$, this edge creates
+        another path from $u$ to $v$. This contradicts the fact that
+        there can be only one path between every pair of vertices.
+      \end{proof}
+    \item Removing any edge disconnect the graph.
+      \begin{proof}
+        Suppose that removing an edge between $u$ and $v$ doesn't
+        disconnect the graph, then there is another path between $u$
+        and $v$ exists. This contradicts the fact that
+        there can be only one path between every pair of vertices.
+      \end{proof}
+    \item Every tree with at least two vertices has at least two
+      leaves.
+      \begin{proof}
+        Suppose the sequence $v_1v_2 \cdots v_m$ is the longest path in
+        $T$. Then $m \geq 2$, since a tree with two vertices must
+        contain at least one edge. There cannot be an edge between
+        $v_1$ and $v_i$ for $2 < i \leq m$, because otherwise
+        $v_1 \cdots v_i$ would form a cycle. There cannot also be an
+        edge between $v_1$ and $u$ for some vertex $u$ that is not on
+        the path, because otherwise the path would be
+        longer. Therefore the only edge incident to $v_1$ is $(v_1,
+        v_2)$, which means that $v_1$ is a leaf. By a symmetric
+        argument, $v_m$ is also a leaf.
+      \end{proof}
+    \item $|V| = |E| + 1$.
+      \begin{proof}
+        We use induction on $|V|$. For the tree with a single vertex,
+        the claim holds because $|E|+1=0+1=1=|V|$. Suppose that the
+        claim holds for all $n$-vertex tree and consider an
+        $(n+1)$-vertex tree $T$. Let $v$ be a leaf of the tree. Deleting
+        $v$ and its incident edge gives us a $n$-vertex tree where
+        $|V|=|E|+1$ holds. Now add the vertex $v$ and its incident
+        edge back, then the equation still holds because both the
+        number of vertices and edges increase by 1. Thus the claim
+        holds for $T$ and, by induction, for all trees.
+      \end{proof}
+    \end{enumerate}
 \end{enumerate}
 
 \end{document}
