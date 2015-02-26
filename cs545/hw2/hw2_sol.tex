@@ -95,27 +95,6 @@ Student: \Author\\
   \-\hspace{5.75em} \textbf{else} \\
   \-\hspace{7.5em} $(x,y) := ComputeClosePair(A_{high}, distance)$\\
 
-  \underline{\textbf{Run time analysis}}\\
-  The sub-routine $ComputeCloseDistance$ takes $\Theta(n)$ time. 
-  Let the total run time for $ComputeClosePair$ be $T(n)$ where $n$ is
-  the number of elements in the input array $A$.
-  Step (1) takes $\Theta(n)$ time, step (2) takes
-  $\Theta(n)$ time, step (3) takes $\Theta(n)$ time, step (4) takes
-  $T(\floor{(n/5)})$ time, step (5) takes $\Theta(n)$ time, step (6)
-  takes $T(n/2)$ time because for each recursive call, we reduce the
-  size of the input for the sub-problem into half, that is, either
-  recurse on lower partition or higher partition. Thus, we have:
-
-  \begin{equation}
-    \begin{split}
-      T(n) &= T(n/5) + T(n/2) + \Theta(n) \\
-      & = \Theta(n)
-    \end{split}
-  \end{equation}
-
-  By the master theorem, the total run time for $FindClosePair$ is
-  $T(n) + \Theta(n) = \Theta(n)$. 
-
   \underline{\textbf{Correctness}}\\
   \textbf{Lemma1}: Given an unsorted array $A$ of $n$ distinct numbers, a
   close pair always exists.
@@ -264,8 +243,60 @@ Student: \Author\\
   So combining Lemma1 and Lemma2, we can conclude that our algorithm
   can always find a pair of close elements.
 
-\item % problem 2
+  \underline{\textbf{Run time analysis}}\\
+  The sub-routine $ComputeCloseDistance$ takes $\Theta(n)$ time. 
+  Let the total run time for $ComputeClosePair$ be $T(n)$ where $n$ is
+  the number of elements in the input array $A$.
+  Step (1) takes $\Theta(n)$ time, step (2) takes
+  $\Theta(n)$ time, step (3) takes $\Theta(n)$ time, step (4) takes
+  $T(\floor{(n/5)})$ time, step (5) takes $\Theta(n)$ time, step (6)
+  takes $T(n/2)$ time because for each recursive call, we reduce the
+  size of the input for the sub-problem into half, that is, either
+  recurse on lower partition or higher partition. Thus, we have:
 
+  \begin{equation}
+    \begin{split}
+      T(n) &= T(n/5) + T(n/2) + \Theta(n) \\
+      & = \Theta(n)
+    \end{split}
+  \end{equation}
+
+  By the master theorem, the total run time for $FindClosePair$ is
+  $T(n) + \Theta(n) = \Theta(n)$. 
+
+\item % problem 2
+  \underline{\textbf{Algorithm}}
+  
+  The algorithm works as the following:
+  (1) Compute the index of the median: $m = \floor{n/2}$.\\
+  (2) Find the $m_{th}$ smallest element $median$, which is also the median
+  of the input array.\\
+  (3) Partition the input array around $median$ into lower subarray and higher
+  array. \\
+  (4) recursively call on the lower sub-arrays, find it $(k/2)_{th}$
+  quantiles, then output $median$, then recursively call on the lower
+  sub-arrays, find it $(k/2)_{th}$ quantiles. Return when $k == 1$.
+
+  \underline{\textbf{Correctness}}
+
+  The algorithm first finds the median of the input array, which is
+  also the median of the $k_{th}$ quantiles. Then partition the array
+  around the median. So now we can solve two sub-problems recursively,
+  each contains at most $(k-1)/2$ order statistics of the original
+  input. Thus the recursion will eventually hit the base case where
+  $k==1$ and return back the $k_{th}$ quantiles.
+
+  \underline{\textbf{Run time analysis}}
+
+  Step (1) takes constant time, step (2) takes $\Theta(n)$ time, step
+  (3) takes $\Theta(n)$ time. The recursion has the depth of $\log {k}$.
+
+  Thus the recurrence equation is:
+  \begin{equation}
+    T(n, k) = 2T(\frac{n}{2}, \frac{k}{2}) + \Theta(n)
+  \end{equation}
+
+  By the master theorem, the run time is $\Theta(n\log {k})$.
 
 \item % problem 3
   \underline{\textbf{Algorithm}}  
@@ -279,19 +310,6 @@ Student: \Author\\
   \-\hspace{4em} $ s_k := FindSmallestInMerge(A[1:i], B[j+1:n], i)$\\ 
   \-\hspace{2em} \textbf{else if} $A[i] < b[j]$ \\
   \-\hspace{4em} $ s_k := FindSmallestInMerge(A[i+1:m], B[1:j], j)$\\ 
-
-  \underline{\textbf{Run time analysis}}
-
-  In each recursive call, we reduce the problem into half of its
-  original size, and other operations executes in constant time, thus
-  the recurrence equation is:
-
-  \begin{equation}
-    \begin{split}
-      T(k) &= T(\frac{k}{2}) + \Theta(1)
-    \end{split}
-  \end{equation}
-  By the master theorem, the run time is $\Theta(\log {k})$.
 
   \underline{\textbf{Correctness}}
 
@@ -311,6 +329,19 @@ Student: \Author\\
 
   With the above argument, we can conclude that our algorithm can find
   the $k_{th}$ smallest element in the merge of two sorted arrays.
+
+  \underline{\textbf{Run time analysis}}
+
+  In each recursive call, we reduce the problem into half of its
+  original size, and other operations executes in constant time, thus
+  the recurrence equation is:
+
+  \begin{equation}
+    \begin{split}
+      T(k) &= T(\frac{k}{2}) + \Theta(1)
+    \end{split}
+  \end{equation}
+  By the master theorem, the run time is $\Theta(\log {k})$.
 
 \end{enumerate}
 \end{document}
