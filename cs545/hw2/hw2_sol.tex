@@ -617,14 +617,10 @@ Student: \Author\\
   us the recurrence equation as follows:
   \begin{equation}
     L(i+1,j) := \begin{cases}
-      min\begin{cases}
-      L(i,j) + distance(i,i+1)\\
-      R(i,j') + distance(j',i+1)\\
-      \end{cases}\\
-      \-\hspace{4.5em} 0 \leq i < n \text{ and } 0 \leq j < n
-      \text{ and } i > j \text{ and } 0 \leq j' < n \text{ and } i >
-      j'\\ 
-      R(i,j') + distance(j',i+1) \-\hspace{7em} i = j\\
+      L(i,j) + distance(i,i+1) \-\hspace{2em} 0 < i < n \text{ and
+      } 0 \leq j < n \text{ and } i > j \\ 
+      \min\limits_{0 \leq j' < i}(R(i,j') + distance(j',i+1)) \-\hspace{2em} i = j \text{ and }
+      0 \leq j' < n \text{ and } i > j' \\
       distance(1, *) \-\hspace{4.5em} i = 0, j = 0\\
       0 \-\hspace{10em} i < 0, j < 0
     \end{cases}
@@ -642,14 +638,10 @@ Student: \Author\\
   The recurrence equation for $R(i,j)$ is similar:
   \begin{equation}
     R(i+1,j) := \begin{cases}
-      min\begin{cases}
-      R(i,j) + distance(i,i+1)\\
-      L(i,j') + distance(j',i+1)\\
-      \end{cases}\\
-      \-\hspace{4.5em} 0 \leq i < n \text{ and } 0 \leq j < n
-      \text{ and } i > j \text{ and } 0 \leq j' < n \text{ and } i >
-      j'\\ 
-      L(i,j') + distance(j',i+1) \-\hspace{7em} i = j\\
+      R(i,j) + distance(i,i+1) \-\hspace{2em} 0 < i < n \text{ and } 0 \leq j < n
+      \text{ and } i > j \\ 
+      \min\limits_{0 \leq j' < i}(L(i,j') + distance(j',i+1)) \-\hspace{2em} i = j \text{ and } 0
+      \leq j' < n \text{ and } i > j'\\ 
       distance(1, \#) \-\hspace{4.5em} i = 0, j = 0\\
       0 \-\hspace{10em} i < 0, j < 0
     \end{cases}
@@ -658,7 +650,34 @@ Student: \Author\\
 
   \underline{\textbf{Evaluate the recurrence bottom-up in a table}}
  
+  Based on the recurrence equation, the following function is used to
+  evaluate the recurrence for the table $L[0:n, 0:n]$ and $R[0:n, 0:n]$.\\\\\\\\\\\\\\\\\\
+
+  \textbf{Function} EvaluateTFD(A, L, R) \\
+  \-\hspace{2em} $L(1,0) := distance(1, *)$ \\
+  \-\hspace{2em} $R(1,0) := distance(1, \#)$ \\
+  \-\hspace{2em} \textbf{for} $i := 2$ to $n$ \\
+  \-\hspace{4em} \textbf{for} $j := 0$ to $i-2$ \\
+  \-\hspace{6em} $L(i,j) := L(i-1, j) + distance(i-1, i)$ \\
+  \-\hspace{6em} $R(i,j) := R(i-1, j) + distance(i-1, i)$ \\
+  \-\hspace{4em} $j := i - 1$ \\
+  \-\hspace{4em} $minR := \infty$ \\
+  \-\hspace{4em} \textbf{for} $j' := 0$ to $j-1$ \\
+  \-\hspace{6em} minR = $min(R(i-1, j'), minR)$ \\
+  \-\hspace{4em} $L(i-1,j) := minR$ \\
+  \-\hspace{4em} $minL := \infty$ \\
+  \-\hspace{4em} \textbf{for} $j' := 0$ to $j-1$ \\
+  \-\hspace{6em} minL = $min(L(i-1, j'), minL)$ \\
+  \-\hspace{4em} $R(i-1,j) := minL$ \\
+
+  \emph{Run time:} the run time for filling $L$ and $R$ takes $O(n^2)$ time.
+
+  \underline{\textbf{Recover an optimal solution from the table of
+      solution values}}
   
+  To get the minimum distance traveled, just take the minimum one
+  between $L(n,x)$ and $R(n,y)$ where $0 \leq x,y < n$. It takes
+  $\Theta(n)$ time.
 
 \end{enumerate}
 \end{document}
