@@ -568,5 +568,97 @@ Student: \Author\\
   grandparent, its parent and itself. There are total $n$ entries,
   thus the run time is $\Theta(n)$.
 
+\item % problem 6
+  \underline{\textbf{characterize the recursive structure of an
+      optimal solution}} 
+
+  After having dialed a prefix of the input digits $A$, the two
+  figures can be only in constant number of configurations, which is,
+  $\frac{12!}{(12-2)!} = 132$. So the optimal solution for dialing $n$
+  digits must be the
+  optimal solution for dialing the $1_{st}$ digit combining the optimal
+  solution for dialing the remaining $n-1$ digits. (So the optimal solution
+  for dialing the remaining $n-1$ digits must be the optimal solution
+  for dialing the $2_{nd}$ combining the optimal solution for dialing
+  the remaining $n-2$ digits). This defines the recursive structure of
+  an optimal solution.
+
+  \underline{\textbf{Derive a recurrence equation for the value of an
+      optimal solution}}
+
+  Assume right finger's initial position is \#, and left finger's
+  initial position is *. 
+
+  Given a $n$-digit telephone number $A=a_1a_2 \cdots a_n$, lets 
+  define: 
+  \begin{equation}
+    \begin{split}
+    distance(i, j) &= \text{ Euclidean distance between digit $i$ and
+      digit } j.\\
+    \text{and},\\
+    distance(i, \#) &= \text{ Euclidean distance between digit $i$ and \# }\\
+    \text{and},\\
+    distance(i, *) &= \text{ Euclidean distance between digit $i$ and
+      *}
+    \end{split}
+  \end{equation}
+
+  and, $L(i,j) := $ minimum cost to type digit $i$ with left finger,
+  and having right finger at digit $j$($j=0$ if right finger is at
+  initial position \#),\\
+  and, $R(i,j) := $ minimum cost to type digit $i$ with right finger,
+  and having left finger at digit $j$($j=0$ if left finger is at
+  initial position *).
+
+  When $i=0$, both left and right fingers are at their initial positions.
+
+  So, according the recursive structure of the optimal solution, we
+  can compute $L(i+1, j)$ based on $L(i,j)$ and $R(i,j)$. This gives
+  us the recurrence equation as follows:
+  \begin{equation}
+    L(i+1,j) := \begin{cases}
+      min\begin{cases}
+      L(i,j) + distance(i,i+1)\\
+      R(i,j') + distance(j',i+1)\\
+      \end{cases}\\
+      \-\hspace{4.5em} 0 \leq i < n \text{ and } 0 \leq j < n
+      \text{ and } i > j \text{ and } 0 \leq j' < n \text{ and } i >
+      j'\\ 
+      R(i,j') + distance(j',i+1) \-\hspace{7em} i = j\\
+      distance(1, *) \-\hspace{4.5em} i = 0, j = 0\\
+      0 \-\hspace{10em} i < 0, j < 0
+    \end{cases}
+  \end{equation}
+
+  In the above equation, $R(i,j') + distance(j',i+1)$ means when the
+  right finger is also at digit-$i$, and with left finger pointing at
+  digit-$j'$, so in this case, we need to also consider moving left
+  finger from $j'$ to $i+1$, which also yields a valid $L(i+1,j)$. So
+  we take the minimum of these two possible cases. Also note we
+  consider the case when $i=j$ separately because in this case
+  $L(i,j)$ is not valid because having two fingers typing one digit
+  twice does not produce the minimum distance.
+
+  The recurrence equation for $R(i,j)$ is similar:
+  \begin{equation}
+    R(i+1,j) := \begin{cases}
+      min\begin{cases}
+      R(i,j) + distance(i,i+1)\\
+      L(i,j') + distance(j',i+1)\\
+      \end{cases}\\
+      \-\hspace{4.5em} 0 \leq i < n \text{ and } 0 \leq j < n
+      \text{ and } i > j \text{ and } 0 \leq j' < n \text{ and } i >
+      j'\\ 
+      L(i,j') + distance(j',i+1) \-\hspace{7em} i = j\\
+      distance(1, \#) \-\hspace{4.5em} i = 0, j = 0\\
+      0 \-\hspace{10em} i < 0, j < 0
+    \end{cases}
+  \end{equation}
+
+
+  \underline{\textbf{Evaluate the recurrence bottom-up in a table}}
+ 
+  
+
 \end{enumerate}
 \end{document}
