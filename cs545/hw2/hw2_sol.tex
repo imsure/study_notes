@@ -343,5 +343,108 @@ Student: \Author\\
   \end{equation}
   By the master theorem, the run time is $\Theta(\log {k})$.
 
+\item % problem 4
+
+  \underline{\textbf{characterize the recursive structure of an
+      optimal solution}} 
+
+  For input string $S = s_1s_2 \cdots s_n$, there are three ways an
+  longest palindromic subsequence (LPS) could start or end:\\
+  \emph{Case 1:} LPS starts at $s_1$ and ends at $s_n$. In this
+  situation, $s_1=s_n$. The optimal solution must be the LPS of
+  substring $s_2 \cdots s_{n-1}$ prefixed with $s_1$ and postfixed
+  with $s_n$. If not, prefixing $s_1$ and postfixing $s_n$ to the LCS
+  of $s_2 \cdots s_{n-1}$ would yield a longer solution, which is a
+  contradiction.
+
+  \emph{Case 2:} LPS does not start at $s_1$. Then optimal solution
+  must be LPS of $s_2 \cdots s_{n}$.
+
+  \emph{Case 3:} LPS does not end at $s_n$. Then optimal solution
+  must be LPS of $s_1 \cdots s_{n-1}$.
+
+  \underline{\textbf{Derive a recurrence equation for the value of an
+      optimal solution}}
+
+  The recursive subproblem that arises is one of computing an LPS over
+  a substring of the input string $S$. Thus the subproblem can be
+  specified by the start and end index of the substring. 
+
+  So let,
+  \begin{equation}
+    L(i, j) := \text{the length of LPS of substring } s_i \cdots s_j
+  \end{equation}
+
+  So, based on the three cases, the recurrence equation can be
+  describe as:
+  \begin{equation}
+    L(i,j) := \begin{cases}
+      max \begin{cases}
+        L(i+1, j-1) + 2 \text{ \hspace{4em} // case 1} \\
+        L(i+1, j) \text{ \hspace{4em} // case 2} \\
+        L(i, j-1) \text{ \hspace{4em} // case 3} \\
+      \end{cases}\\
+      \-\hspace{6em} i \geq 1 \text{ and } j \geq 1 \text{ and } i < j \\
+
+      1 \-\hspace{5.5em} i = j \\
+      0 \-\hspace{5.5em} i > j \\
+    \end{cases}
+  \end{equation}
+
+  The solution value for the original problem is $L(1, n)$.
+
+  \underline{\textbf{Evaluate the recurrence bottom-up in a table}}
+
+  We evaluate $L(i,j)$ in a table $L[0:n, 0:n]$.
+  In general, the entry $(i,j)$ depends on the three entries $(i,
+  j-1)$, $(i+1, j-1)$ and $(i+1, j)$. So we fill in the table 
+  in diagonal-major order: first all the entries where $j-i=0$, then
+  all the entries where $j-i=1$, etc.
+
+  \textbf{Function} $EvaluateLCS(S, L, n)$\\
+  \-\hspace{2em} // fill in values at diagonal\\
+  \-\hspace{2em} \textbf{for} $k := 1$ to $n$\\
+  \-\hspace{4em} $L[k,k] := 1$ \\
+
+  \-\hspace{2em} // fill in values that rely only on diagonal values\\
+  \-\hspace{2em} \textbf{for} $i := 1$ to $n-1$\\
+  \-\hspace{4em} $j := i + 1$\\
+  \-\hspace{4em} \textbf{if} $S[i] == S[j]$\\
+  \-\hspace{6em} $L[i,j] = 2$\\
+  \-\hspace{4em} \textbf{else}\\
+  \-\hspace{6em} $L[i,j] = max(L[i,j-1], L[i+1,j])$\\
+
+  \-\hspace{2em} // fill in remaining values \\
+  \-\hspace{2em} \textbf{for} $k := 2$ to $n-1$\\
+  \-\hspace{4em} \textbf{for} $i := 1$ to $n-k$\\
+  \-\hspace{6em} $j := i + k$\\
+  \-\hspace{6em} $L[i,j] = max(L[i,j-1], L[i+1,j], L[i+1,j-1])$\\
+
+  \emph{Run time analysis:} First and second \textbf{for} loop both
+  take $\Theta(n)$ time. The third loop takes $O(n^2)$ time. So the
+  total run time is $O(n^2)$.
+
+  \underline{\textbf{Recover an optimal solution from the table of
+      solution values}}
+
+  \textbf{Function} $RecoverLCS(S, L, i, j)$\\
+  \-\hspace{2em} \textbf{if} $i > j$\\
+  \-\hspace{4em} \textbf{return}\\
+  \-\hspace{2em} \textbf{if} $i == j$\\
+  \-\hspace{4em} output $S[i]$\\
+  \-\hspace{4em} \textbf{return}\\
+  \-\hspace{2em} \textbf{if} $S[i] == S[j]$ and $L[i,j] == L[i+1,
+    j-1]+2$  // case 1\\ 
+  \-\hspace{4em} $RecoverLCS(S, L, i+1, j-1)$\\
+  \-\hspace{4em} output $S[i]$\\
+  \-\hspace{2em} \textbf{else if} $L[i,j] == L[i+1,j]$ // case 2\\
+  \-\hspace{4em} $RecoverLCS(S, L, i+1, j)$\\
+  \-\hspace{2em} \textbf{else} $L[i,j] == L[i,j-1]$ // case 3\\
+  \-\hspace{4em} $RecoverLCS(S, L, i, j-1)$\\
+
+  \emph{Run time analysis:} each call increments $i$ or decrements $i$
+  or $j$ by 1 and spends $\Theta(1)$ time. Since we start with $i=1$
+  and $j=n$, it takes total $\Theta(n)$ time.
+
 \end{enumerate}
 \end{document}
