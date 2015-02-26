@@ -113,8 +113,8 @@ Student: \Author\\
     \end{split}
   \end{equation}
 
-  So the total run time for $FindClosePair$ is $T(n) + \Theta(n) =
-  \Theta(n)$. 
+  By the master theorem, the total run time for $FindClosePair$ is
+  $T(n) + \Theta(n) = \Theta(n)$. 
 
   \underline{\textbf{Correctness}}\\
   \textbf{Lemma1}: Given an unsorted array $A$ of $n$ distinct numbers, a
@@ -271,24 +271,14 @@ Student: \Author\\
   \underline{\textbf{Algorithm}}  
 
   \textbf{Function} $FindSmallestInMerge(A[1:m], B[1:n], k)$\\
-  \-\hspace{2em} $medA := \floor{m/2}$ // index of median of A \\
-  \-\hspace{2em} $medB := \floor{n/2}$ // index of median of B \\
-  \-\hspace{2em} $medM := medA + medB$ // index of median of merge of A
-  and B \\
-  \-\hspace{2em} \textbf{if} $A[medA] > B[medB]$\\
-  \-\hspace{4em} \textbf{if} $k == medM$\\
-  \-\hspace{6em} \textbf{return} $A[medA]$\\
-  \-\hspace{4em} \textbf{else if} $k < medM$\\
-  \-\hspace{6em} $ x := FindSmallestInMerge(A[1:medA-1], B[1:medB], k)$\\ 
-  \-\hspace{4em} \textbf{else} // $k > medM$\\
-  \-\hspace{6em} $ x := FindSmallestInMerge(A[medA+1:m], B[medB+1:n], k-medM)$\\ 
-  \-\hspace{2em} \textbf{else} // $A[medA] < B[medB]$\\
-  \-\hspace{4em} \textbf{if} $k == medM$\\
-  \-\hspace{6em} \textbf{return} $B[medB]$\\
-  \-\hspace{4em} \textbf{else if} $k < medM$\\
-  \-\hspace{6em} $ x := FindSmallestInMerge(A[1:medA], B[1:medB-1], k)$\\ 
-  \-\hspace{4em} \textbf{else} // $k > medM$\\
-  \-\hspace{6em} $ x := FindSmallestInMerge(A[medA+1:m], B[medB+1:1], k-medM)$\\ 
+  \-\hspace{2em} $i := \floor{k/2}$ \\
+  \-\hspace{2em} $j := \ceil{k/2}$ \\
+  \-\hspace{2em} \textbf{if} $k == 1$ // base case \\
+  \-\hspace{4em} \textbf{return} $min(A[1], B[1])$  \\
+  \-\hspace{2em} \textbf{if} $A[i] > b[j]$ \\
+  \-\hspace{4em} $ s_k := FindSmallestInMerge(A[1:i], B[j+1:n], i)$\\ 
+  \-\hspace{2em} \textbf{else if} $A[i] < b[j]$ \\
+  \-\hspace{4em} $ s_k := FindSmallestInMerge(A[i+1:m], B[1:j], j)$\\ 
 
   \underline{\textbf{Run time analysis}}
 
@@ -298,22 +288,29 @@ Student: \Author\\
 
   \begin{equation}
     \begin{split}
-      T(m+n) &= T(\frac{m+n}{2}) + \Theta(1)\\
-      &= \Theta(\log {(m+n)})
+      T(k) &= T(\frac{k}{2}) + \Theta(1)
     \end{split}
   \end{equation}
+  By the master theorem, the run time is $\Theta(\log {k})$.
 
   \underline{\textbf{Correctness}}
 
-  Since all numbers in $A$ and $B$ are distinct, there the median of
-  $A$ is either $>$ or $<$ the median of $B$.
-  If $A[medA] > B[medB]$, then every element in $B$ that is $\leq$
-  $B[medB]$ appears before $A[medA]$ in the merged array. So $A[medA]$
-  is also the median of the merged array. Depending on the value of
-  $k$, the $k_{th}$ smallest could be just $A[medA]$, or lower side of
-  the merge array which consists of $A[1:medA-1] and B[1:medB]$, or
-  higher side of the merge array which consists of $A[medA+1:m],
-  B[medB+1:n], k-medM)$ 
+  If $A[i] > B[j]$, where $i := \floor{k/2}$ and $j := \ceil{k/2}$,
+  then in the merged array, there can be at most $k-2$ elements that
+  are $<$ $B[j]$, that is, $A[1:i-1]$ and $B[1:j-1]$. So we must have
+  the $k_{th}$ smallest element $s_k > B[j]$. On the other hand, there
+  are at least $k-1$ elements that are $< A[i]$ in the merged array,
+  that is, $A[1:i-1]$ and $B[1:j]$, thus we have $s_k \leq A[i]$.
+
+  The above analysis shows that $s_k$ can only appear in the subarray
+  $B[j+1:n]$ or $A[1:i]$. Moreover, we have thrown out $j$ elements
+  that $<$ $s_k$, thus, the problem is reduced to finding the $i_{th}$
+  smallest element in the merged array of $B[j+1:n]$ and $A[1:i]$.
+
+  In the case when $A[i] < B[j]$, the argument is symmetric.
+
+  With the above argument, we can conclude that our algorithm can find
+  the $k_{th}$ smallest element in the merge of two sorted arrays.
 
 \end{enumerate}
 \end{document}
