@@ -493,10 +493,80 @@ Student: \Author\\
 
 
   \underline{\textbf{Evaluate the recurrence bottom-up in a table}}
+  
+  We evaluate the table $L$ in a bottom up fashion recursively give a
+  sub-tree rooted at $v$. 
+
+  \textbf{Function} EvaluateMIS(L, v) \\
+  \-\hspace{2em} \textbf{if} $v.isLeaf$ // base case \\
+  \-\hspace{4em} $L(v) := \omega(v)$ \\
+  \-\hspace{4em} \textbf{return} $L(v)$ \\
+  \-\hspace{2em} $sumChildren := 0$ \\
+  \-\hspace{2em} $sumGrandchildren := 0$ \\
+  \-\hspace{2em} \textbf{for each} child $u$ \textbf{in} $v.children$ \\
+  \-\hspace{4em} $sumChildren := sumChildren + EvaluateMIS(L, u)$ \\
+  \-\hspace{2em} \textbf{if} $v.hasGrandchildren$ \\
+  \-\hspace{4em} \textbf{for each} grandchild $u$ \textbf{in}
+  $v.grandchildren$ \\
+  \-\hspace{6em} $sumGrandchildren := sumGrandchildren +
+  EvaluateMIS(L,u)$ \\
+  \-\hspace{4em} $L(v) := max(sumChildren, \omega(v) +
+  sumGrandchildren)$ \\
+  \-\hspace{4em} \textbf{return} $L(v)$ \\
+  \-\hspace{2em} \textbf{else} // $v$ does not have grandchildren \\
+  \-\hspace{4em} $L(v) := max(sumChildren, \omega(v)$) \\
+  \-\hspace{4em} \textbf{return} $L(v)$ \\
+
+  To compute the $MIS$ for the original input tree rooted at $r$, we
+  just need to call $EvaluteMIS(L, r)$.
+
+  \emph{Run time analysis:} there are total $n$ entries to be filled
+  in. To fill each entry $L(v)$, the algorithm only looks at the
+  children and grandchildren of $v$. So each vertex $u$ is accessed only
+  for three times: when evaluating itself, evaluating its parent and
+  when evaluating its grandparent. Since each vertex is evaluated only
+  for a constant time, thus the total run time is $\Theta(n)$.\\\\\\\\\\\\
 
 
   \underline{\textbf{Recover an optimal solution from the table of
       solution values}}
+
+  \textbf{Function} $RecoverMIS(L, v)$ \\
+  \-\hspace{2em} $sumChildren := 0$ \\
+  \-\hspace{2em} $sumGrandchildren := 0$ \\
+  \-\hspace{2em} \textbf{if} $v.isLeaf$ \\
+  \-\hspace{4em} output $v$ \\
+  \-\hspace{4em} \textbf{return} \\
+  \-\hspace{2em} \textbf{for each} child $u$ \textbf{in} $v.children$ \\ 
+  \-\hspace{4em} $sumChildren := sumChildren + L(u)$ \\ 
+  \-\hspace{2em} \textbf{if} $v.hasGrandchildren$ \\
+  \-\hspace{4em} \textbf{for each} grandchild $u$ \textbf{in}
+  $v.grandchildren$ \\
+  \-\hspace{6em} $sumGrandchildren := sumGrandchildren + L(u)$ \\
+  \-\hspace{4em} \textbf{if} $L(v) == \omega(v) + sumGrandchildren$ \\
+  \-\hspace{6em} output $v$ \\
+  \-\hspace{6em} \textbf{for each} grandchild $u$ \textbf{in} $v.grandchildren$\\
+  \-\hspace{8em} $RecoverMIS(L, u)$ \\
+  \-\hspace{4em} \textbf{else} \\
+  \-\hspace{6em} \textbf{for each} child $u$ \textbf{in} $v.children$ \\ 
+  \-\hspace{8em} $RecoverMIS(L, u)$\\
+  \-\hspace{2em} \textbf{else} \\
+  \-\hspace{4em} \textbf{if} $L(v) == sumChildren$ \\
+  \-\hspace{6em} \textbf{for each} child $u$ \textbf{in} $v.children$ \\ 
+  \-\hspace{8em} $RecoverMIS(L, u)$ \\
+  \-\hspace{4em} \textbf{else} \\
+  \-\hspace{6em} output $v$ \\
+  \-\hspace{6em} \textbf{return} \\
+
+  The procedure recovers a MIS of the sub-tree rooted at vertex $v$. So
+  to recover a MIS for the original input tree rooted at $r$, just
+  call $RecoverMIS(L, r)$. 
+
+  \emph{Run time analysis:} similar with the analysis of the
+  evaluation function, this time each table entry $L(v)$ will be
+  looked up for at most three times, that is, when looking at its
+  grandparent, its parent and itself. There are total $n$ entries,
+  thus the run time is $\Theta(n)$.
 
 \end{enumerate}
 \end{document}
