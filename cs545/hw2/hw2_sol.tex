@@ -401,7 +401,7 @@ Student: \Author\\
   in diagonal-major order: first all the entries where $j-i=0$, then
   all the entries where $j-i=1$, etc.
 
-  \textbf{Function} $EvaluateLCS(S, L, n)$\\
+  \textbf{Function} $EvaluateLPS(S, L, n)$\\
   \-\hspace{2em} // fill in values at diagonal\\
   \-\hspace{2em} \textbf{for} $k := 1$ to $n$\\
   \-\hspace{4em} $L[k,k] := 1$ \\
@@ -427,7 +427,11 @@ Student: \Author\\
   \underline{\textbf{Recover an optimal solution from the table of
       solution values}}
 
-  \textbf{Function} $RecoverLCS(S, L, i, j)$\\
+  The function $RecoverLPS$ recovers a LPS of input string $S$ that
+  starts at position $i$, ends at position $j$, given the precomputed
+  table $L$.
+
+  \textbf{Function} $RecoverLPS(S, L, i, j)$\\
   \-\hspace{2em} \textbf{if} $i > j$\\
   \-\hspace{4em} \textbf{return}\\
   \-\hspace{2em} \textbf{if} $i == j$\\
@@ -438,13 +442,61 @@ Student: \Author\\
   \-\hspace{4em} $RecoverLCS(S, L, i+1, j-1)$\\
   \-\hspace{4em} output $S[i]$\\
   \-\hspace{2em} \textbf{else if} $L[i,j] == L[i+1,j]$ // case 2\\
-  \-\hspace{4em} $RecoverLCS(S, L, i+1, j)$\\
+  \-\hspace{4em} $RecoverLPS(S, L, i+1, j)$\\
   \-\hspace{2em} \textbf{else} $L[i,j] == L[i,j-1]$ // case 3\\
-  \-\hspace{4em} $RecoverLCS(S, L, i, j-1)$\\
+  \-\hspace{4em} $RecoverLPS(S, L, i, j-1)$\\
 
-  \emph{Run time analysis:} each call increments $i$ or decrements $i$
-  or $j$ by 1 and spends $\Theta(1)$ time. Since we start with $i=1$
+  \emph{Run time analysis:} each call increments $i$ or decrements
+  $j$ by 1 and spends $\Theta(1)$ time. Since we start with $i=1$
   and $j=n$, it takes total $\Theta(n)$ time.
+
+\item % problem 5
+
+  \underline{\textbf{characterize the recursive structure of an
+      optimal solution}} 
+
+  Let the maximum independent set be $MIS$.
+  For a tree rooted at some node $r$, then there are two cases for
+  $MIS$: 
+  \emph{case 1:} $r$ is in $MIS$. Then $MIS$ cannot contain the
+  children of $r$. $MIS$ must be the sum of the optimal solutions
+  rooted at each of the grandchildren of $r$, together with $r$.
+
+  \emph{case 2:} $r$ is not in $MIS$. Then $MIS$ must be the sum of
+  optimal solutions root at each of the children of $r$. 
+
+
+  \underline{\textbf{Derive a recurrence equation for the value of an
+      optimal solution}}
+
+  The recursive subproblem that arises is one of computing an $MIS$ over
+  a sub-tree of the input tree. Thus the problem can be specified
+  by the node of the tree. Let,
+
+  \begin{equation}
+    L(v) := \text{total weights of the maximum independent set of the
+      sub-tree rooted at } v
+  \end{equation}
+
+  Our goal is to compute $L(r)$.
+  So, based on the three cases, the recurrence equation can be
+  described as:
+  \begin{equation}
+    L(v) := \begin{cases}
+      max\begin{cases}
+      \omega(v) + \sum\limits_{\text{grandchildren of } v} L(u)\\
+      \sum\limits_{\text{children of }v} L(u)\\
+      \end{cases}\\
+      \omega(v) \-\hspace{5.5em} $v$ \text{ is a leaf} \\
+    \end{cases}
+  \end{equation}
+
+
+  \underline{\textbf{Evaluate the recurrence bottom-up in a table}}
+
+
+  \underline{\textbf{Recover an optimal solution from the table of
+      solution values}}
 
 \end{enumerate}
 \end{document}
