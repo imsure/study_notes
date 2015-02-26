@@ -1,0 +1,319 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% This is LaTeX file for Homework Assignment 2
+% Author: Shuo Yang
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,epsfig,graphics,hyperref,amsthm,mathtools}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+\hypersetup{colorlinks=true}
+
+\setlength{\textwidth}{7in}
+\setlength{\topmargin}{-0.575in}
+\setlength{\textheight}{9.25in}
+\setlength{\oddsidemargin}{-.25in}
+\setlength{\evensidemargin}{-.25in}
+
+\reversemarginpar
+\setlength{\marginparsep}{-15mm}
+
+\newcommand{\rmv}[1]{}
+\newcommand{\bemph}[1]{{\bfseries\itshape#1}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\imply}{\to}
+\newcommand{\bic}{\leftrightarrow}
+
+% Some user defined strings for the homework assignment
+%
+\def\CourseCode{CS545}
+\def\AssignmentNo{2}
+\def\DateHandedOut{Spring, 2015}
+\def\DateDue{Feb 26}
+\def\Author{Shuo Yang}
+
+\begin{document}
+
+\noindent
+
+\CourseCode \hfill \DateHandedOut
+
+\begin{center}
+Homework Assignment \#\AssignmentNo\\
+Due: \DateDue\\
+Student: \Author\\
+\end{center}
+
+% A horizontal split line
+\hrule\smallskip
+
+% Enumerate through all questions.
+\begin{enumerate}
+
+\item % Problem 1
+  \underline{\textbf{Algorithm}}
+
+  \textbf{Function} $FindClosePair(A[1:n])$\\
+  \-\hspace{2em} $distance := ComputeCloseDistance(A[1:n])$\\
+  \-\hspace{2em} $(x,y) := ComputeClosePair(A[1:n], distance)$\\
+
+  \textbf{Function} $ComputeCloseDistance(A[1:n])$\\
+  \-\hspace{2em} Linearly scan the input array $A[1:n]$ from left to
+  right, find the minimum and maximum numbers, put them into variables
+  $min$ and $max$ respectively, and let\\ 
+  \-\hspace{2em} $distance := \floor{(max-min)/(n-1)}$.\\ 
+
+  \textbf{Function} $ComputeClosePair(A[1:n], distance)$\\
+  \-\hspace{2em} (1) Linearly scan the input array $A$ from left
+  to right, find the minimum and maximum numbers, put them into
+  variables $min$ and $max$ respectively.\\
+  \-\hspace{2em} (2) Divide the $n$ elements into $\floor{n/5}$ groups of $5$ elements,
+  and $\leq 1$ group of $<5$ elements.\\
+  \-\hspace{2em} (3) Find the median of each group using selection sort.\\
+  \-\hspace{2em} (4) Recursively find the median $med$ of the $\floor{n/5}$ medians
+  found in step (3).\\
+  \-\hspace{2em} (5) Partition the input array $A$ around $med$ from
+  step (4) into two subarrays $A_{low}$ and $A_{high}$ such
+  that $A_{low}$ contains all elements $\leq med$ and $A_{high}$ contains
+  all elements $\geq med$.\\ 
+  \-\hspace{2em} (6) \textbf{if} $med-min \leq distance$\\
+  \-\hspace{5.5em} \textbf{return} $(med, min)$\\
+  \-\hspace{3.75em} \textbf{if} $max-med \leq distance$\\
+  \-\hspace{5.5em} \textbf{return} $(max, med)$\\
+  \-\hspace{3.75em} \textbf{if} $n$ is odd\\
+  \-\hspace{5.75em} \textbf{if} $max-med \geq med-min$\\
+  \-\hspace{7.5em} $(x,y) := ComputeClosePair(A_{low}, distance)$\\
+  \-\hspace{5.75em} \textbf{else} \\
+  \-\hspace{7.5em} $(x,y) := ComputeClosePair(A_{high},
+  distance)$\\
+  \-\hspace{3.75em} \textbf{else} // $n$ is even\\
+  \-\hspace{5.75em} \textbf{if} $max-med-distance \geq med-min$ // med is lower
+  median \\
+  \-\hspace{7.5em} $(x,y) := ComputeClosePair(A_{low}, distance)$\\
+  \-\hspace{5.75em} \textbf{else} \\
+  \-\hspace{7.5em} $(x,y) := ComputeClosePair(A_{high}, distance)$\\
+
+  \underline{\textbf{Run time analysis}}\\
+  The sub-routine $ComputeCloseDistance$ takes $\Theta(n)$ time. 
+  Let the total run time for $ComputeClosePair$ be $T(n)$ where $n$ is
+  the number of elements in the input array $A$.
+  Step (1) takes $\Theta(n)$ time, step (2) takes
+  $\Theta(n)$ time, step (3) takes $\Theta(n)$ time, step (4) takes
+  $T(\floor{(n/5)})$ time, step (5) takes $\Theta(n)$ time, step (6)
+  takes $T(n/2)$ time because for each recursive call, we reduce the
+  size of the input for the sub-problem into half, that is, either
+  recurse on lower partition or higher partition. Thus, we have:
+
+  \begin{equation}
+    \begin{split}
+      T(n) &= T(n/5) + T(n/2) + \Theta(n) \\
+      & = \Theta(n)
+    \end{split}
+  \end{equation}
+
+  So the total run time for $FindClosePair$ is $T(n) + \Theta(n) =
+  \Theta(n)$. 
+
+  \underline{\textbf{Correctness}}\\
+  \textbf{Lemma1}: Given an unsorted array $A$ of $n$ distinct numbers, a
+  close pair always exists.
+
+  \begin{proof}
+    Prove by contradiction, that is, no such a close pair exists, this
+    means for any pair $(x,y)$ where $x > y$, we have:
+    \begin{equation}
+      x - y > \frac{1}{n-1} (max - min)
+    \end{equation}
+    Suppose we order numbers in the array $A$ in ascending order as a
+    sequence: $a_1, a_2, \cdots, a_n$ where $a_i > a_j$ if $i >
+    j$. Let $distance = \frac{1}{n-1} (max - min)$, according to the
+    assumption, we have:
+
+    \begin{equation}
+      \begin{split}
+      a_n - a_{n-1} > distance\\
+      a_{n-1} - a_{n-2} > distance\\
+      \cdots\\
+      a_3 - a_2 > distance\\
+      a_2 - a_1 > distance\\
+      \end{split}
+    \end{equation}
+
+    Summing the above equations together produces:
+    \begin{equation}
+      \begin{split}
+        a_n - a_1 &> distance \times (n-1)\\
+        & = \frac{1}{n-1} (max - min) \times (n-1)\\
+        & = max - min\\
+      \end{split}
+    \end{equation}
+    Since we have sorted the array $A$ in ascending order, this means
+    that $a_n = max$ and $a_1 = min$, therefore the above equation says that
+    $max - min > max - min$, this is clearly a contradiction, thus the lemma1
+    must be true.
+  \end{proof}
+
+  \textbf{Lemma2}: Given an unsorted array $A$ of $n$ distinct
+  numbers partitioned around its median into two subarrys $A_{low}$ and
+  $A_{high}$. $A_{low}$ contains all elements $\leq$ median and
+  $A_{high}$ contains all elements $\geq$ median. 
+  Let the maximum element be $max$, minimum element be $min$ and median
+  be $med$. A close pair must exist in $A_{low}$ if $max-med \geq
+  med-min$ (when $n$ is odd) or $max-med-distance \geq med-min$ (when $n$ is
+  even), and in $A_{high}$ otherwise. 
+
+  \begin{proof}
+    Prove by contradition.
+    If $max-med \geq med-min$ (when $n$ is odd) or $max-med-distance \geq
+    med-min$ (when $n$ is even), assume that $A_{low}$ does not contain
+    any close pairs. There are two cases to consider:
+    \begin{enumerate}
+    \item $n$ is odd.\\
+      In this case, $A_{low}$ contains $\frac{n-1}{2}+1=\frac{n+1}{2}$ elements,
+      including the $med$ itself. Applying the same method used in
+      proving Lemma1, we sort $A_{low}$ as: $a_0,
+      a_1, \cdots, a_{(n+1)/2}$ in ascending order. According to the
+      assumption, we must have,
+      \begin{equation}
+        \begin{split}
+          a_{\frac{n+1}{2}} - a_{\frac{n+1}{2}-1} > distance\\
+          \cdots\\
+          a_3 - a_2 > distance\\
+          a_2 - a_1 > distance\\
+        \end{split}
+      \end{equation}
+
+      Summing the above equations together produces:
+      \begin{equation}
+        \begin{split}
+          a_{\frac{n+1}{2}} - a_1 &> distance \times (\frac{n+1}{2}-1)\\
+          & = \frac{1}{n-1} (max - min) \times (\frac{n+1}{2}-1)\\
+          & = \frac{1}{n-1} (max - min) \times \frac{n-1}{2}\\
+          & = \frac{max - min}{2}\\
+        \end{split}
+      \end{equation}
+
+      Since $A_{low}$ is sorted in ascending order, $a_{\frac{n+1}{2}}
+      = med$ and $a_1 = min$. Thus,
+
+      \begin{equation}
+        \begin{split}
+          med - min > \frac{max - min}{2}\\
+          med > \frac{max+min}{2}
+        \end{split}
+      \end{equation}
+
+      And because $max-med \geq med-min$, we
+      have $med \leq \frac{max+min}{2}$. But we have just proved that
+      $med > \frac{max+min}{2}$, clearly it is a contradiction. Thus,
+      there must exist a close pair in $A_{low}$.
+
+    \item $n$ is even.\\
+      In this case, there are two medians, left median and right
+      median. Assume that we pick the low median.
+      $A_{low}$ contains $\frac{n}{2}$ elements,
+      including the $med$ itself. Applying the same method used in
+      proving Lemma1, we sort $A_{low}$ as: $a_1,
+      a_2, \cdots, a_{n/2}$ in ascending order. According to the
+      assumption, we must have,
+      \begin{equation}
+        \begin{split}
+          a_{\frac{n}{2}} - a_{\frac{n}{2}-1} > distance\\
+          \cdots\\
+          a_3 - a_2 > distance\\
+          a_2 - a_1 > distance\\
+        \end{split}
+      \end{equation}
+
+      Summing the above equations together produces:
+      \begin{equation}
+        \begin{split}
+          a_{\frac{n}{2}} - a_1 &> distance \times (\frac{n}{2}-1)\\
+          & = \frac{1}{n-1} (max - min) \times (\frac{n}{2}-1)\\
+          & = \frac{max - min}{2} \times \frac{n-2}{n-1}\\
+        \end{split}
+      \end{equation}
+
+      Since $A_{low}$ is sorted in ascending order, $a_{\frac{n}{2}}
+      = med$ and $a_1 = min$, we have:
+
+      \begin{equation}
+        \begin{split}
+          med - min > \frac{max - min}{2} \times \frac{n-2}{n-1}\\
+          med > \frac{max+min}{2} - \frac{max-min}{2(n-1)}
+        \end{split}
+      \end{equation}
+
+      Substituting $\frac{max-min}{n-1}$ with $distance$, we have:
+      \begin{equation}
+          med > \frac{max+min}{2} - \frac{distance}{2}
+      \end{equation}
+
+      And because $max-med-distance \geq med-min$, we
+      have $med \leq \frac{max+min}{2} - \frac{distance}{2}$. But we
+      have just proved that 
+      $med > \frac{max-min}{2} - \frac{distance}{2}$, clearly it is a
+      contradiction. Thus, there must exist a close pair in $A_{low}$.      
+    \end{enumerate}
+      The proof for the case when $max-med < med-min$ (when $n$ is odd) or
+      $max-med-distance < med-min$ (when $n$ is even) is symmetrical.
+  \end{proof}
+
+  So combining Lemma1 and Lemma2, we can conclude that our algorithm
+  can always find a pair of close elements.
+
+\item % problem 2
+
+
+\item % problem 3
+  \underline{\textbf{Algorithm}}  
+
+  \textbf{Function} $FindSmallestInMerge(A[1:m], B[1:n], k)$\\
+  \-\hspace{2em} $medA := \floor{m/2}$ // index of median of A \\
+  \-\hspace{2em} $medB := \floor{n/2}$ // index of median of B \\
+  \-\hspace{2em} $medM := medA + medB$ // index of median of merge of A
+  and B \\
+  \-\hspace{2em} \textbf{if} $A[medA] > B[medB]$\\
+  \-\hspace{4em} \textbf{if} $k == medM$\\
+  \-\hspace{6em} \textbf{return} $A[medA]$\\
+  \-\hspace{4em} \textbf{else if} $k < medM$\\
+  \-\hspace{6em} $ x := FindSmallestInMerge(A[1:medA-1], B[1:medB], k)$\\ 
+  \-\hspace{4em} \textbf{else} // $k > medM$\\
+  \-\hspace{6em} $ x := FindSmallestInMerge(A[medA+1:m], B[medB+1:n], k-medM)$\\ 
+  \-\hspace{2em} \textbf{else} // $A[medA] < B[medB]$\\
+  \-\hspace{4em} \textbf{if} $k == medM$\\
+  \-\hspace{6em} \textbf{return} $B[medB]$\\
+  \-\hspace{4em} \textbf{else if} $k < medM$\\
+  \-\hspace{6em} $ x := FindSmallestInMerge(A[1:medA], B[1:medB-1], k)$\\ 
+  \-\hspace{4em} \textbf{else} // $k > medM$\\
+  \-\hspace{6em} $ x := FindSmallestInMerge(A[medA+1:m], B[medB+1:1], k-medM)$\\ 
+
+  \underline{\textbf{Run time analysis}}
+
+  In each recursive call, we reduce the problem into half of its
+  original size, and other operations executes in constant time, thus
+  the recurrence equation is:
+
+  \begin{equation}
+    \begin{split}
+      T(m+n) &= T(\frac{m+n}{2}) + \Theta(1)\\
+      &= \Theta(\log {(m+n)})
+    \end{split}
+  \end{equation}
+
+  \underline{\textbf{Correctness}}
+
+  Since all numbers in $A$ and $B$ are distinct, there the median of
+  $A$ is either $>$ or $<$ the median of $B$.
+  If $A[medA] > B[medB]$, then every element in $B$ that is $\leq$
+  $B[medB]$ appears before $A[medA]$ in the merged array. So $A[medA]$
+  is also the median of the merged array. Depending on the value of
+  $k$, the $k_{th}$ smallest could be just $A[medA]$, or lower side of
+  the merge array which consists of $A[1:medA-1] and B[1:medB]$, or
+  higher side of the merge array which consists of $A[medA+1:m],
+  B[medB+1:n], k-medM)$ 
+
+\end{enumerate}
+\end{document}
