@@ -1,0 +1,79 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,epsfig,graphics,hyperref,amsthm,mathtools}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+\hypersetup{colorlinks=true}
+
+\setlength{\textwidth}{7in}
+\setlength{\topmargin}{-0.575in}
+\setlength{\textheight}{9.25in}
+\setlength{\oddsidemargin}{-.25in}
+\setlength{\evensidemargin}{-.25in}
+
+\reversemarginpar
+\setlength{\marginparsep}{-15mm}
+
+\newcommand{\rmv}[1]{}
+\newcommand{\bemph}[1]{{\bfseries\itshape#1}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\imply}{\to}
+\newcommand{\bic}{\leftrightarrow}
+
+% Some user defined strings for the homework assignment
+%
+\def\CourseCode{CS545}
+\def\DateHandedOut{Spring, 2015}
+\def\Author{Shuo Yang}
+
+\begin{document}
+
+\noindent
+
+\CourseCode \hfill \DateHandedOut
+
+\begin{center}
+Course: \CourseCode\\
+\DateHandedOut\\
+Solution for the puzzle\\
+Student: \Author\\
+\end{center}
+
+% A horizontal split line
+\hrule\smallskip
+
+\section*{\underline{Problem}}
+\emph{input:}
+
+Given $n$ algorithm students $s_1,s_2,\cdots,s_n$ ordered by their
+ranks from 1 through $n$, and 
+$m$ chocolate bars. The top-ranked student $s_1$, proposes a discrete
+distribution of bars among the students. Each student votes ``yes'' or
+``no'' for the proposal. If at least half the votes are ``yes'', the bars
+are handed out. If the proposal fails, the top student is dismissed
+and gets no bars, the process repeats among the remaining students
+(that means, $s_2$ gets to propose first). Assuming students are making
+their decisions independently, and smart enough to figure out the
+optimal way to vote to maximize the number of bars they get, and are
+extremely competitive, so each votes to dismiss the proposer if they
+get the same number of bars whether or not the proposal wins.\\\\
+\emph{output:}
+
+The optimal distribution proposed by the top student $s_1$.
+
+\section*{\underline{Algorithm}}
+
+Assume that all $n$ students are ranked from 1 to $n$, highest to
+lowest. First define some global variables.\\\\ 
+$OptDist[1:n]$ := array that holds the optmial distribution\\
+So $OptDist[i]$ is the number of bars distributed to the student with
+the $i_{th}$ rank.
+$m$ := total number of chocolate bars\\
+$n$ := total number of students\\\\
+Funtion $OptimalBarDistribution$ takes a $rank$ of a student
+and produces a optimal distribution proposed by that student.\\\\
+\textbf{Function} $OptimalBarDistribution( rank )$\\
+
+
+\end{document}
