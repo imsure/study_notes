@@ -66,14 +66,36 @@ The optimal distribution proposed by the top student $s_1$.
 
 Assume that all $n$ students are ranked from 1 to $n$, highest to
 lowest. First define some global variables.\\\\ 
-$OptDist[1:n]$ := array that holds the optmial distribution\\
+$OptDist[1:n]$ := array that holds the optmial distribution, initially
+, contains all 0s.\\
 So $OptDist[i]$ is the number of bars distributed to the student with
-the $i_{th}$ rank.
+the $i_{th}$ rank.\\
 $m$ := total number of chocolate bars\\
 $n$ := total number of students\\\\
 Funtion $OptimalBarDistribution$ takes a $rank$ of a student
 and produces a optimal distribution proposed by that student.\\\\
 \textbf{Function} $OptimalBarDistribution( rank )$\\
+\-\hspace{2em} \textbf{if} $rank == n$ // base case \\
+\-\hspace{4em} $OptDist[rank] = m$ // assign all bars since no student
+exists with a lower rank \\
+\-\hspace{4em} \textbf{return}\\
+\-\hspace{2em} $OptDist[rank] := m$ // initialize number of bars to
+$rank_{th}$ student.\\
+\-\hspace{2em} $next\_rank := rank+1$\\
+\-\hspace{2em} $OptimalBarDistribution( next\_rank )$\\
+\-\hspace{2em} \textbf{for} $i := next\_rank to n$\\
+\-\hspace{4em} \textbf{if} $OptDist[i] > 0$\\
+\-\hspace{6em} $OptDist[i] := 0$\\
+\-\hspace{4em} \textbf{else} // $OptDist[i] == 0$\\
+\-\hspace{6em} $OptDist[i] := 1$\\
+\-\hspace{6em} $OptDist[i] := OptDist[i] - 1$\\
+
+When the function terminates, $OptDist$ will contain the optimal bar
+distribution proposed by the $rank_{th}$ student. So to get the
+optimal bar distribution proposed by the top ranked student, just call
+$OptimalBarDistribution(1)$.
+
+\section*{\underline{Correctness}}
 
 
 \end{document}
