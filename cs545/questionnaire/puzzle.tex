@@ -96,6 +96,52 @@ optimal bar distribution proposed by the top ranked student, just call
 $OptimalBarDistribution(1)$.
 
 \section*{\underline{Correctness}}
+First, suppose among all $n$ students, there are $k$ students
+remaining (the other $n-k$ stduents dismissed). Let $P(k)$ be: ``among
+all $k$ students, the top ranked (top rank is $n-k+1$) student's
+optimal bar distribution is 
+to distribute all $0s$ to $\ceil{\frac{k-1}{2}}$ students among other
+students except herself, and to
+distribute all $1s$ to $\floor{\frac{k-1}{2}}$ students among other
+students except herself, and to distrbute $m-\floor{\frac{k-1}{2}}$ bars
+to herself.
 
+Now we prove that $P(k)$ is true using induction.
+\begin{proof}
+  \emph{Base case:} $P(1)$. When there is only 1 student left, his
+  optimal distribution is to give all $m$ bars to himself because
+  $k-1=0$. The predicate holds.
+
+  \emph{Inductive step:} Suppose $P(k)$ holds, we need to show that
+  $P(k+1)$ also holds. Where there are $k+1$ students left, the number
+  of students with lower rank than the top ranked student is
+  $k$. Since $P(k)$ is true, the top ranked student will figure out
+  the optimal distribution based on how bars are distributed by the student
+  with the next highest rank. By the induction hypothesis, the next
+  highest ranked student will distribute the bars this way: all $0s$
+  to $\ceil{\frac{k-1}{2}}$ students among other students except
+  himself, and all $1s$ to $\floor{\frac{k-1}{2}}$
+  students among other students except himself, and
+  $m-\floor{\frac{k-1}{2}}$ bars to himself. In order to win,
+  the top ranked student must make at least $\ceil{\frac{k+1}{2}}$
+  students vote ``yes''. Thus, to maximize the number of bars she can
+  get, the top ranked student can distribute in this way: all $1s$ to
+  $\ceil{\frac{k-1}{2}}$ students to whom the next highest ranked
+  student distribute 0 bar to, they must vote ``yes'' to the top
+  ranked student's proposal, otherwise they would end up getting
+  nothing; all $0s$ to $\floor{\frac{k-1}{2}}$ students to whom the
+  next highest ranked student distribute 1 bar to; and also $0$ to the
+  next highest ranked student, and all the remaining bars to
+  herself. Since each student always votes ``yes'' 
+  to herself, therefore the top ranked student will eventually get
+  total $1+\ceil{\frac{k-1}{2}} = \ceil{\frac{k+1}{2}}$ ``yes'' votes,
+  which are good enough for her to win the proposal. So the top ranked
+  student's optimal distrition would be: all $0s$ to
+  $\floor{\frac{k-1}{2}} + 1 = \floor{\frac{k+1}{2}} =
+  \ceil{\frac{k}{2}}$ students; all $1s$ to $\ceil{\frac{k-1}{2}} = 
+    \floor{\frac{k}{2}}$ students; and all the remaining bars to
+    herself. Thus $P(k+1)$ also holds. 
+
+\end{proof}
 
 \end{document}
