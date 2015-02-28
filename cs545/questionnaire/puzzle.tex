@@ -64,8 +64,8 @@ The optimal distribution proposed by the top student $s_1$.
 
 \section*{\underline{Algorithm}}
 
-Assume that all $n$ students are ranked from 1 to $n$, highest to
-lowest. First define some global variables.\\\\ 
+Assume that all $n$ students are ranked from 1 to $n$, 1 is the
+highest rank and $n$ is the lowest rank. First define some global variables.\\\\ 
 $OptDist[1:n]$ := array that holds the optmial distribution, initially
 , contains all 0s.\\
 So $OptDist[i]$ is the number of bars distributed to the student with
@@ -73,7 +73,7 @@ the $i_{th}$ rank.\\
 $m$ := total number of chocolate bars\\
 $n$ := total number of students\\\\
 Funtion $OptimalBarDistribution$ takes a $rank$ of a student
-and produces a optimal distribution proposed by that student.\\\\
+and produces an optimal distribution proposed by that student.\\\\
 \textbf{Function} $OptimalBarDistribution( rank )$\\
 \-\hspace{2em} \textbf{if} $rank == n$ // base case \\
 \-\hspace{4em} $OptDist[rank] = m$ // assign all bars since no student
@@ -104,7 +104,7 @@ to distribute all $0s$ to $\ceil{\frac{k-1}{2}}$ students among other
 students except herself, and to
 distribute all $1s$ to $\floor{\frac{k-1}{2}}$ students among other
 students except herself, and to distrbute $m-\floor{\frac{k-1}{2}}$ bars
-to herself.\\
+to herself.\\\\
 Now we prove that $P(k)$ is true using induction.
 \begin{proof}
   \emph{Base case:} $P(1)$. When there is only 1 student left, his
@@ -183,8 +183,7 @@ recurrency equation is:
   T(1) = \Theta(1)\\
 \end{split}
 \end{equation}
-
-By repeatedly subsititute the recurrence relation on the right hand
+By repeatedly subsitituting the recurrence relation on the right hand
 side, we have,
 \begin{equation}
 \begin{split}
