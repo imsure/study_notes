@@ -83,7 +83,7 @@ exists with a lower rank \\
 $rank_{th}$ student.\\
 \-\hspace{2em} $next\_rank := rank+1$\\
 \-\hspace{2em} $OptimalBarDistribution( next\_rank )$\\
-\-\hspace{2em} \textbf{for} $i := next\_rank to n$\\
+\-\hspace{2em} \textbf{for} $i := next\_rank$ to $n$\\
 \-\hspace{4em} \textbf{if} $OptDist[i] > 0$\\
 \-\hspace{6em} $OptDist[i] := 0$\\
 \-\hspace{4em} \textbf{else} // $OptDist[i] == 0$\\
@@ -104,16 +104,14 @@ to distribute all $0s$ to $\ceil{\frac{k-1}{2}}$ students among other
 students except herself, and to
 distribute all $1s$ to $\floor{\frac{k-1}{2}}$ students among other
 students except herself, and to distrbute $m-\floor{\frac{k-1}{2}}$ bars
-to herself.
-
+to herself.\\
 Now we prove that $P(k)$ is true using induction.
 \begin{proof}
   \emph{Base case:} $P(1)$. When there is only 1 student left, his
   optimal distribution is to give all $m$ bars to himself because
-  $k-1=0$. The predicate holds.
-
+  $k-1=0$. So $P(1)$ holds.\\\\
   \emph{Inductive step:} Suppose $P(k)$ holds, we need to show that
-  $P(k+1)$ also holds. Where there are $k+1$ students left, the number
+  $P(k+1)$ also holds. When there are $k+1$ students left, the number
   of students with lower rank than the top ranked student is
   $k$. Since $P(k)$ is true, the top ranked student will figure out
   the optimal distribution based on how bars are distributed by the student
@@ -125,7 +123,7 @@ Now we prove that $P(k)$ is true using induction.
   $m-\floor{\frac{k-1}{2}}$ bars to himself. In order to win,
   the top ranked student must make at least $\ceil{\frac{k+1}{2}}$
   students vote ``yes''. Thus, to maximize the number of bars she can
-  get, the top ranked student can distribute in this way: all $1s$ to
+  get, the top ranked student must distribute in this way: all $1s$ to
   $\ceil{\frac{k-1}{2}}$ students to whom the next highest ranked
   student distribute 0 bar to, they must vote ``yes'' to the top
   ranked student's proposal, otherwise they would end up getting
@@ -133,15 +131,76 @@ Now we prove that $P(k)$ is true using induction.
   next highest ranked student distribute 1 bar to; and also $0$ to the
   next highest ranked student, and all the remaining bars to
   herself. Since each student always votes ``yes'' 
-  to herself, therefore the top ranked student will eventually get
+  to her own proposal, therefore the top ranked student will eventually get
   total $1+\ceil{\frac{k-1}{2}} = \ceil{\frac{k+1}{2}}$ ``yes'' votes,
   which are good enough for her to win the proposal. So the top ranked
   student's optimal distrition would be: all $0s$ to
   $\floor{\frac{k-1}{2}} + 1 = \floor{\frac{k+1}{2}} =
   \ceil{\frac{k}{2}}$ students; all $1s$ to $\ceil{\frac{k-1}{2}} = 
-    \floor{\frac{k}{2}}$ students; and all the remaining bars to
-    herself. Thus $P(k+1)$ also holds. 
-
+  \floor{\frac{k}{2}}$ students; and all the remaining bars to
+  herself. Thus $P(k+1)$ also holds. \\\\
+  By the principle of induction, $P(k)$ if true for all $n \in
+  \mathbb{Z}^+$.  
 \end{proof}
+
+Although in order to ensure the top ranked student always wins, this
+relation must hold:
+\begin{equation}
+  m - \floor{\frac{n-1}{2}} \geq 1
+\end{equation}
+When $n$ is odd, we can take off the floor:
+\begin{equation}
+\begin{split}
+  m - \frac{n-1}{2} \geq 1\\
+  m  \geq \frac{n+1}{2}
+\end{split}
+\end{equation}
+When $n$ is even, $\floor{\frac{n-1}{2}} = \frac{n}{2}-1$, thus we have:
+\begin{equation}
+\begin{split}
+  m -  (\frac{n}{2}-1)\geq 1\\
+  m  \geq \frac{n}{2}
+\end{split}
+\end{equation}
+So we can conclude that:
+\begin{equation}
+  m  \geq \floor{\frac{n+1}{2}}
+\end{equation}
+
+The correctness of the algorithm follows the proof of $P(k)$ as long
+as $m \geq \floor{\frac{n+1}{2}}$.
+
+\section*{\underline{Run time analysis}}
+Let $T(n)$ be the run time for the input with $n$ students. The
+recurrency equation is:
+\begin{equation}
+\begin{split}
+  T(n) = T(n-1) + \Theta(n-1)\\
+  T(n-1) = T(n-2) + \Theta(n-2)\\
+  T(n-2) = T(n-3) + \Theta(n-3)\\
+  \cdots\\
+  T(2) = T(1) + \Theta(1)\\
+  T(1) = \Theta(1)\\
+\end{split}
+\end{equation}
+
+By repeatedly subsititute the recurrence relation on the right hand
+side, we have,
+\begin{equation}
+\begin{split}
+  T(n) &= T(1) + \Theta(\sum_{i=1}^{n-1} i)\\
+  &= \Theta(1) + \Theta(n^2)\\
+  &= \Theta(n^2)\\
+\end{split}
+\end{equation}
+
+Therefore the run time is $\Theta(n^2)$.
+
+\section*{\underline{Answer to the puzzle}}
+In the puzzle, it is the case when $n=5$ and $m=100$, the relationship
+between $n$ and $m$ holds. So by running the algorithm on $n$ and $m$,
+we get the optimal distribution proposed by the top ranked student is:\\\\
+rank-1: 98 bars;\\ rank2: 0 bar;\\ rank-3: 1 bar;\\ rank-4: 0
+bar;\\ rank-5: 1 bar. 
 
 \end{document}

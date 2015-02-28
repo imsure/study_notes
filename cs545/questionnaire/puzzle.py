@@ -7,8 +7,8 @@ Email: imsure95@gmail.com
 
 #!/usr/bin/env python3
 
-num_students = 10
-num_bars = 5
+num_students = 5
+num_bars = 100
 opt_dist = []
 
 def print_optdist( rank ):
