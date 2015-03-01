@@ -154,8 +154,8 @@ The pseudo code for divide and conquer is:\\
 \-\hspace{4em} $S := max(S, SpanningRect(A,m,lo,hi,L,R))$\\
 \-\hspace{4em} \textbf{return} $S$\\
 \-\hspace{2em} \textbf{else} // lo == hi\\
-\-\hspace{4em} \textbf{return} the length of longest run of 0s in that
-column $A[1:m, lo]$\\
+\-\hspace{4em} \textbf{return} $LR[lo]$ // the length of longest run
+of 0s in that column $A[1:m, lo]$\\
 
 The following pseudo code computes the length of longest run of 0s for
 each column, the result is in the table $LR[1:n]$.\\\\
@@ -175,5 +175,69 @@ each column, the result is in the table $LR[1:n]$.\\\\
 \-\hspace{6em} $prev\_run = curr\_run$\\
 \-\hspace{4em} $LR[col] := max\_run$\\
 
+Putting together, the final pseudo code is:\\
+
+\textbf{Function} $FindLargestEmptyRect(A,m,lo,hi,L,R)$\\
+\-\hspace{3em} $L := PrecomputeLeftRuns(A)$\\
+\-\hspace{3em} $R := PrecomputeRightRuns(A)$\\
+\-\hspace{3em} $LR := PrecomputeLongestRuns(A)$\\
+\-\hspace{3em} \textbf{return} $LargestEmptyRect(A,m,1,n,L,R,LR)$\\
+
+\underline{Run time analysis:}\\
+Subroutine $PrecomputeLeftRuns$, $PrecomputeRightRuns$ and
+$PrecomputeLongestRuns$ all take $\Theta(mn)$ time. Subroutine
+$SpanningRect$ takes $\Theta(m^2)$ time, so the recurrence equation
+for the routine $LargestEmptyRect$ is:
+
+\begin{equation}
+\begin{split}
+  T(m,n) &= T(m,\frac{n}{2}) + T(m,\frac{n}{2}) + \Theta(m^2)\\
+  &= 2T(m,\frac{n}{2}) + \Theta(m^2)\\
+  &= \Theta(nm^2)
+\end{split}
+\end{equation}
+
+The intuition behind this result is that since $m$ does not change for
+$n$, so we can treat $m$ as constant for $n$. This yields a simple
+recurrence equation:
+
+\begin{equation}
+\begin{split}
+  T(n) &= 2T(\frac{n}{2}) + \Theta(1)\\
+  &= \Theta(n)
+\end{split}
+\end{equation}
+
+Since the algorithm always spends $\Theta(m^2)$ for each subproblem,
+therefore the total run time is $\Theta(n)\Theta(m^2) = \Theta(nm^2)$.
+
+\underline{\textbf{To summarize:}}\\
+
+All possible rectangles in $A[1:m,1:n]$ is $\Theta(m^2n^2)$. Our
+divide-and-conquer algorithm guarantees not to look at all possible
+rectangles. The key is case-3, where we first find the best left
+rectangle, and then the best right rectangle, then just glue them
+together, in doing so we can avoid searching for all possible
+rectangles. \\
+
+Another insight is that every rectangle spans some column, so for
+every column $j$, we just ask: what is the longest rectangle spanning
+$j$, so the total run time is $\Theta(nm^2)$.\\
+
+\underline{\textbf{Comparison of different algorithms}}\\
+
+\begin{center}
+    \begin{tabular}{ | l | l |}
+    \hline
+    Algorithm & Run time \\ \hline
+    Exhaustive search & $\Theta(m^3n^3)$ (can be reduced to
+    $\Theta(m^2n^2)$) \\ \hline
+    Divide and conquer & $\Theta(mn \times min(m,n))$ (depends on
+    dividing horizontally or vertically) \\ \hline
+    Dynamic programming & $\Theta(mn \times min(m,n))$ \\ \hline
+    Amortized & $\Theta(mn)$ (this is optimal algorithm, have to look
+    at every entry?) \\ \hline
+    \end{tabular}
+\end{center}
 
 \end{document}
