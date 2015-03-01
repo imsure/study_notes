@@ -1,0 +1,160 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,epsfig,graphics,hyperref,amsthm,mathtools}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+\hypersetup{colorlinks=true}
+
+\setlength{\textwidth}{7in}
+\setlength{\topmargin}{-0.575in}
+\setlength{\textheight}{9.25in}
+\setlength{\oddsidemargin}{-.25in}
+\setlength{\evensidemargin}{-.25in}
+
+\reversemarginpar
+\setlength{\marginparsep}{-15mm}
+
+\newcommand{\rmv}[1]{}
+\newcommand{\bemph}[1]{{\bfseries\itshape#1}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\imply}{\to}
+\newcommand{\bic}{\leftrightarrow}
+
+% Some user defined strings for the homework assignment
+%
+\def\CourseCode{CS545 - Design and Analysis of Algorithms}
+\def\DateHandedOut{Spring, 2015}
+\def\Professor{John Kececioglu}
+\def\Author{Shuo Yang}
+
+\begin{document}
+
+\noindent
+
+\CourseCode \hfill \DateHandedOut
+
+\begin{center}
+Lecture Notes\\
+Taught by: Professor \Professor\\
+\Author\\
+\end{center}
+
+% A horizontal split line
+\hrule\smallskip
+
+\section{Divide and Conquer}
+\subsection{Idea}
+A Divide and Conquer algorithm consists of three phases:
+\begin{enumerate}
+\item Divide phase\\
+Split the original problem into smaller instances of same problem
+(usually $\Theta(1)$ subproblems) of size $\leq \alpha n$ for $\alpha
+< 1$.
+\item Conquer phase\\
+Solve the subproblem recursively.
+\item Combining phase\\
+Combine solutions of subproblems to attain the solution to the
+original problem.
+\end{enumerate}
+
+The key to applying this technique is to discover how a solution to
+the input problem can be composed from (or how to decomposed into)
+solution of subproblems of the same form. Problem decomposition
+involves studying the structure of the solution. 
+
+\subsection{Example}
+\underline{\textbf{Largest Empty Rectangle}}\\
+
+\underline{Input}: 2-D boolean array $A[1:m, 1:n]$ of 0s
+and 1s.\\
+
+\underline{Output}: Find a subarray $A[i:k, j:l]$ with only 0s of
+largest area.\\
+
+\underline{Exhaustive search(first attempt):} exhaustively search for
+all possible rectangles that contains only 0s and find out the
+largest. This takes $\Theta(n^3m^3)$ time to do, very inefficient.\\
+
+\underline{\textbf{A divide and conquer approach:}}
+
+Cut $A$ vertically into half at the middle column. Then the optimal
+solution falls into three cases:
+\begin{itemize}
+\item Case-1: strictly in the left half;
+\item Case-2: strictly in the right half;
+\item Case-3: spans the middle.
+\end{itemize}
+
+We can recursively solve case-1 and case-2. For case-3, the largest
+empty rectangle breaks into two pieces:
+\begin{itemize}
+\item Piece-a: left rectangle ends at mid-column and is optimal
+  conditioned on starting and ending at its first and last rows. 
+\item Piece-b: right rectangle starts at mid-column and is optimal
+  conditioned on starting and ending at its first and last rows. 
+\end{itemize}
+
+For a given choice of row $i$ and $k$, we can find the optimal left
+piece-a (starting at $i$, ending at $k$) by taking a min of the
+column-left-run-length of 0s on rows $i \cdots
+k$ ending at the mid-column. Similar for the optimal right piece-b. 
+
+So we precompute:\\
+$L[i,j] :=$ length of the longest run of 0s in row $i$ that ends at
+$(i,j)$.\\
+$R[i,j] :=$ length of the longest run of 0s in row $i$ that starts at
+$(i,j)$.\\
+
+The following pseudo code computes $L$.\\\\
+\textbf{Function} $PrecomputeLeftRuns(A[1:m, 1:n])$\\
+\-\hspace{2em} \textbf{for} $i := 1$ to $m$\\
+\-\hspace{4em} $L[i, 0] := 0$\\
+\-\hspace{4em} \textbf{for} $j := 1$ to $n$\\
+\-\hspace{6em} \textbf{if} $A[i,j] == 0$\\
+\-\hspace{8em} $L[i,j] := 1 + L[i, j-1]$\\
+\-\hspace{6em} \textbf{else}\\
+\-\hspace{8em} $L[i,j] := 0$\\
+
+The following pseudo code computes $R$.\\\\
+\textbf{Function} $PrecomputeLeftRuns(A[1:m, 1:n])$\\
+\-\hspace{2em} \textbf{for} $i := 1$ to $m$\\
+\-\hspace{4em} \textbf{if} $A[i,n] == 0$\\
+\-\hspace{6em} $R[i,n] = 1$\\
+\-\hspace{4em} \textbf{else}\\
+\-\hspace{6em} $R[i,n] = 0$\\
+\-\hspace{4em} \textbf{for} $j := n-1$ to $1$\\
+\-\hspace{6em} \textbf{if} $A[i,j] == 0$\\
+\-\hspace{8em} $R[i,j] := 1 + R[i, j+1]$\\
+\-\hspace{6em} \textbf{else}\\
+\-\hspace{8em} $R[i,j] := 0$\\
+
+The following pseudo code computes case-3.\\\\
+\textbf{Function} $SpanningRect(A,m,lo,hi,L,R)$\\
+\-\hspace{2em} $mid := \floor{\frac{hi+lo}{2}}$\\
+\-\hspace{2em} $S := 0$ // holds the area of the largest empty
+rectangle spanning the mid column.\\
+\-\hspace{2em} \textbf{for} $i := 1$ to $m$ // row start\\
+\-\hspace{4em} $minL = \infty$\\
+\-\hspace{4em} $minR = \infty$\\
+\-\hspace{4em} \textbf{for} $k := 1$ to $m$ // row end\\
+\-\hspace{6em} $minL = min(minL, L[k,mid])$\\
+\-\hspace{6em} $minR = min(minR, R[k,mid])$\\
+\-\hspace{6em} $S = max(S, (k-i+1) \times (minR+minL))$\\
+\-\hspace{2em} \textbf{return} $S$\\
+
+The final pseudo code is:\\
+
+\textbf{Function} $LargestEmptyRect(A,m,lo,hi,L,R)$\\
+\-\hspace{2em} \textbf{if} $lo < hi$ \\
+\-\hspace{4em} $S := 0$\\
+\-\hspace{4em} $mid := \floor{\frac{hi+lo}{2}}$\\
+\-\hspace{4em} $S := max(S, LargestEmptyRect(A,m,lo,mid,L,R))$\\
+\-\hspace{4em} $S := max(S, LargestEmptyRect(A,m,mid+1,hi,L,R))$\\
+\-\hspace{4em} $S := max(S, SpanningRect(A,m,lo,hi,L,R))$\\
+\-\hspace{4em} \textbf{return} $S$\\
+\-\hspace{2em} \textbf{else} // lo == hi\\
+\-\hspace{4em} \textbf{return} the length of longest run of 0s in that
+column $A[1:m, lo]$\\
+
+\end{document}
