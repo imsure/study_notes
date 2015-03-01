@@ -117,7 +117,7 @@ The following pseudo code computes $L$.\\\\
 \-\hspace{8em} $L[i,j] := 0$\\
 
 The following pseudo code computes $R$.\\\\
-\textbf{Function} $PrecomputeLeftRuns(A[1:m, 1:n])$\\
+\textbf{Function} $PrecomputeRightRuns(A[1:m, 1:n])$\\
 \-\hspace{2em} \textbf{for} $i := 1$ to $m$\\
 \-\hspace{4em} \textbf{if} $A[i,n] == 0$\\
 \-\hspace{6em} $R[i,n] = 1$\\
@@ -137,13 +137,13 @@ rectangle spanning the mid column.\\
 \-\hspace{2em} \textbf{for} $i := 1$ to $m$ // row start\\
 \-\hspace{4em} $minL = \infty$\\
 \-\hspace{4em} $minR = \infty$\\
-\-\hspace{4em} \textbf{for} $k := 1$ to $m$ // row end\\
+\-\hspace{4em} \textbf{for} $k := i$ to $m$ // row end\\
 \-\hspace{6em} $minL = min(minL, L[k,mid])$\\
 \-\hspace{6em} $minR = min(minR, R[k,mid])$\\
 \-\hspace{6em} $S = max(S, (k-i+1) \times (minR+minL))$\\
 \-\hspace{2em} \textbf{return} $S$\\
 
-The final pseudo code is:\\
+The pseudo code for divide and conquer is:\\
 
 \textbf{Function} $LargestEmptyRect(A,m,lo,hi,L,R)$\\
 \-\hspace{2em} \textbf{if} $lo < hi$ \\
@@ -156,5 +156,24 @@ The final pseudo code is:\\
 \-\hspace{2em} \textbf{else} // lo == hi\\
 \-\hspace{4em} \textbf{return} the length of longest run of 0s in that
 column $A[1:m, lo]$\\
+
+The following pseudo code computes the length of longest run of 0s for
+each column, the result is in the table $LR[1:n]$.\\\\
+\textbf{Function} $PrecomputeLongestRuns(A[1:m, 1:n])$\\
+\-\hspace{2em} \textbf{for} $col := 1$ to $n$\\
+\-\hspace{4em} \textbf{if} $A[m,col] == 0$\\
+\-\hspace{6em} $prev\_run := 1$\\
+\-\hspace{4em} \textbf{else}\\
+\-\hspace{6em} $prev\_run := 0$\\
+\-\hspace{4em} max\_run := prev\_run\\
+\-\hspace{4em} \textbf{for} $i := m-1$ to $1$\\
+\-\hspace{6em} \textbf{if} $A[i,col] == 0$\\
+\-\hspace{8em} $curr\_run := 1 + prev\_run$\\
+\-\hspace{6em} \textbf{else}\\
+\-\hspace{8em} $curr\_run := 0$\\
+\-\hspace{6em} $max\_run = max(max\_run, curr\_run)$\\
+\-\hspace{6em} $prev\_run = curr\_run$\\
+\-\hspace{4em} $LR[col] := max\_run$\\
+
 
 \end{document}
