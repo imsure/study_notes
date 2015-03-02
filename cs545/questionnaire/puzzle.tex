@@ -72,7 +72,7 @@ So $OptDist[i]$ is the number of bars distributed to the student with
 the $i_{th}$ rank.\\
 $m$ := total number of chocolate bars\\
 $n$ := total number of students\\\\
-Funtion $OptimalBarDistribution$ takes a $rank$ of a student
+Function $OptimalBarDistribution$ takes a $rank$ of a student
 and produces an optimal distribution proposed by that student.\\\\
 \textbf{Function} $OptimalBarDistribution( rank )$\\
 \-\hspace{2em} \textbf{if} $rank == n$ // base case \\
@@ -134,7 +134,7 @@ Now we prove that $P(k)$ is true using induction.
   to her own proposal, therefore the top ranked student will eventually get
   total $1+\ceil{\frac{k-1}{2}} = \ceil{\frac{k+1}{2}}$ ``yes'' votes,
   which are good enough for her to win the proposal. So the top ranked
-  student's optimal distrition would be: all $0s$ to
+  student's optimal distribution would be: all $0s$ to
   $\floor{\frac{k-1}{2}} + 1 = \floor{\frac{k+1}{2}} =
   \ceil{\frac{k}{2}}$ students; all $1s$ to $\ceil{\frac{k-1}{2}} = 
   \floor{\frac{k}{2}}$ students; and all the remaining bars to
@@ -199,7 +199,7 @@ Therefore the run time is $\Theta(n^2)$.
 In the puzzle, it is the case when $n=5$ and $m=100$, the relationship
 between $n$ and $m$ holds. So by running the algorithm on $n$ and $m$,
 we get the optimal distribution proposed by the top ranked student is:\\\\
-rank-1: 98 bars;\\ rank2: 0 bar;\\ rank-3: 1 bar;\\ rank-4: 0
+rank-1: 98 bars;\\ rank-2: 0 bar;\\ rank-3: 1 bar;\\ rank-4: 0
 bar;\\ rank-5: 1 bar. 
 
 \end{document}
