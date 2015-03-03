@@ -240,4 +240,62 @@ $j$, so the total run time is $\Theta(nm^2)$.\\
     \end{tabular}
 \end{center}
 
+\section{Finding $k_{th}$ smallest}
+\subsection{Finding minimum and maximum simultaneously}
+
+\underline{algorithm using $2n-2$ comparisons}\\
+
+\textbf{Function} $MinMax(A[1:n])$\\
+\-\hspace{3em} $min := A[1]$\\
+\-\hspace{3em} $max := A[1]$\\
+\-\hspace{3em} \textbf{for} $i := 2$ to $n$\\
+\-\hspace{5em} \textbf{if} $A[i] < min$\\
+\-\hspace{7em} $min := A[i]$\\
+\-\hspace{5em} \textbf{if} $A[i] > max$\\
+\-\hspace{7em} $max := A[i]$\\
+\-\hspace{3em} \textbf{return} $(min,max)$\\
+
+\underline{algorithm using $3\floor{n/2}$ comparisons}\\
+
+\textbf{Function} $MinMax(A[1:n])$\\
+\-\hspace{3em} \textbf{if} $n$ is odd\\
+\-\hspace{5em} $min := A[1]$\\
+\-\hspace{5em} $max := A[1]$\\
+\-\hspace{3em} \textbf{else}\\ 
+\-\hspace{5em} \textbf{if} $A[1] > A[2]$\\
+\-\hspace{7em} $min := A[2]$\\
+\-\hspace{7em} $max := A[1]$\\
+\-\hspace{5em} \textbf{else}\\ 
+\-\hspace{7em} $min := A[1]$\\
+\-\hspace{7em} $max := A[2]$\\
+\-\hspace{3em} \textbf{while} $i \leq n-1$\\
+\-\hspace{5em} \textbf{if} $A[i] < A[i+1]$\\
+\-\hspace{7em} \textbf{if} $A[i] < min$\\
+\-\hspace{9em} $min := A[i]$\\
+\-\hspace{7em} \textbf{if} $A[i+1] > max$\\
+\-\hspace{9em} $max := A[i+1]$\\
+\-\hspace{5em} \textbf{else}\\
+\-\hspace{7em} \textbf{if} $A[i+1] < min$\\
+\-\hspace{9em} $min := A[i+1]$\\
+\-\hspace{7em} \textbf{if} $A[i] > max$\\
+\-\hspace{9em} $max := A[i]$\\
+\-\hspace{5em} $i := i+2$\\
+\-\hspace{3em} \textbf{return} $(min, max)$\\
+
+\subsection{Finding $k_{th}$ smallest in $\Theta(n)$ worst-case time}
+
+The algorithm works as follows:\\
+
+\textbf{Function} $k_{th}Smallest(A[1:n], k)$\\
+\-\hspace{3em} $med := FindMedian(A[1:n])$\\
+\-\hspace{3em} $Partition(A[1:n], med)$\\
+\-\hspace{3em} \textbf{if} $k == \ceil{\frac{n}{2}}$\\
+\-\hspace{5em} \textbf{return} $med$\\
+\-\hspace{3em} \textbf{else if} $k < \ceil{\frac{n}{2}}$\\
+\-\hspace{5em} \textbf{return}
+$k_{th}Smallest(A[1:\ceil{\frac{n}{2}}-1], k)$\\
+\-\hspace{3em} \textbf{else}\\
+\-\hspace{5em} \textbf{return}
+$k_{th}Smallest(A[\ceil{\frac{n}{2}}+1:n], k-\ceil{\frac{n}{2}})$\\
+
 \end{document}
