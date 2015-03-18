@@ -1,5 +1,6 @@
 \documentclass[11pt]{article}
-\usepackage{amsmath,amssymb,epsfig,graphics,hyperref,amsthm,mathtools}
+\usepackage{amsmath,amssymb,epsfig,graphics,hyperref,amsthm,mathtools,
+  graphicx}
 \DeclarePairedDelimiter\ceil{\lceil}{\rceil}
 \DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
 
@@ -297,5 +298,76 @@ $k_{th}Smallest(A[1:\ceil{\frac{n}{2}}-1], k)$\\
 \-\hspace{3em} \textbf{else}\\
 \-\hspace{5em} \textbf{return}
 $k_{th}Smallest(A[\ceil{\frac{n}{2}}+1:n], k-\ceil{\frac{n}{2}})$\\
+
+
+\section{Greedy Algorithm}
+\subsection{Activity selection problem}
+
+\emph{input:} a collection of $n$ activities, that are competing for a
+single resource, and must be scheduled. Activity $i$ has a start time
+$s_i$ and finish time $f_i$, where $s_i \leq f_i$, and it wishes to
+use the resource during $[s_i, f_i)$. Activities $i$ and $j$ are
+compatible if their intervals $[s_i, f_i)$ and $[s_j, f_j)$ do not
+overlap. 
+
+The activity selection problem is to choose a subset of mutually
+compatible activities of maximum cardinality. \\
+
+\underline{Greedy algorithm strategy}\\
+
+Let us order the activities by increasing finish time: $f_1 \leq f_2
+\leq \cdots \leq f_n$. Consider the activities in this order (earliest
+finish time first), and add on to our subset if it is compatible with
+our subset. The following algorithm implements this idea where $S$ and
+$F$ are sets of start time and finish time sorted by increasing finish
+time, $n$ is the number of activities.\\
+
+\textbf{Function} $GreedyActivitySelection(S, F, n)$\\
+\-\hspace{3em} $A := \{1\}$ // earliest finished activity\\
+\-\hspace{3em} $j := 1$ // indicates the latest finish time in $A$\\
+\-\hspace{3em} \textbf{for} $i := 2$ to $n$ \\
+\-\hspace{5em} \textbf{if} $S[i] \geq F[j]$ \\
+\-\hspace{7em} $A := A \cup \{i\}$ \\
+\-\hspace{7em} $j := i$ \\
+\-\hspace{3em} \textbf{return} $A$ \\
+
+\underline{Correctness}\\\\
+\textbf{Lemma:} Suppose $A$ is a subset of an optimal solution. Let
+$a$ be an activity that finishes earliest among all activities that
+are compatible with $A$ and that finish after the activities in
+$A$. Then $A \cup {a}$ is also a subset of an optimal solution.
+
+\begin{proof}
+  Since $A$ is a subset of an optimal solution, let $A^*$ be an
+  optimal solution with $A \subseteq A^*$. Let $b$ be the activity in
+  $A^* - A$  that also finishes earliest among those finish after the
+  activities in $A$. We have two cases:
+\begin{itemize}
+\item case-1: $b = a$, then $A \cup \{a\} \subseteq A^*$, the lemma
+  holds. 
+\item case-2: $b \neq a$, then $b$ must finish after $a$. We can
+  substitute $a$ for $b$ in $A^*$ and still yields an optimal
+  solution. Thus $(A^* - \{b\}) \cup \{a\}$ is a mutually compatible
+  set with the same cardinality as $A^*$, so it is also an optimal
+  solution, and moreover, it contains $A \cup \{a\}$.
+  
+  \includegraphics[width=7cm,height=2cm]{./imgs/activity-selection.png}
+  
+\end{itemize}
+\end{proof}
+
+\textbf{Theorem:} $GreedyActivitySelection$ finds an optimal
+solution. 
+
+\begin{proof}
+  Certainly, $\emptyset$ is always a subset of an optimal
+  solution. Thus $\emptyset \cup \{1\}$ is a subset of an optimal
+  solution by the lemma. 
+
+  By induction on the number of iteration, when the function
+  terminates, $A$ is a subset of an optimal solution. And all
+  activities not in $A$ are incompatible with some activity in $A$, so
+  $A$ is not properly contained by any solution. Thus $A$ is optimal. 
+\end{proof}
 
 \end{document}
