@@ -126,10 +126,8 @@ between city $A$ and $B$, where $D=\sum_{i=0}^{n} d_i$.
 
 \underline{\textbf{Greedy algorithm}}
 
-The greedy strategy is to travel as far as you can until the remaining
-gas is not enough to make it to the next gas station $g_i$, then you
-have to refuel at the gas station $g_{i-1}$. The algorithm works as
-follows:\\ 
+The greedy strategy is to refuel at the gas station whose distance
+from the current stop is closest to $m$ but less than $m$.\\
 
 \textbf{Function} $GreedyTripRefuel()$\\
 \-\hspace{3em} $A := \emptyset$ // the set of refueling stops\\
@@ -143,14 +141,54 @@ refuel\\
 \-\hspace{7em} $T_2 := T_2 + d_i$ \\
 \-\hspace{7em} $i := i + 1$ \\
 \-\hspace{5em} \textbf{else} \\
-\-\hspace{7em} $i := i - 1$ \\
-\-\hspace{7em} $A := A \cup \{i\}$ \\
+\-\hspace{7em} $i := i - 1$ // cannot make it to station $g_i$, so
+must refuel at station $g_{i-1}$\\ 
+\-\hspace{7em} $A := A \cup \{g_i\}$ \\
 \-\hspace{7em} $T_2 := T_2 - d_i$ \\
 \-\hspace{7em} $T_1 := T_2$ \\
 \-\hspace{3em} \textbf{return} $A$ \\
 
 The algorithm runs in $O(n)$ time since there are at most $n$ gas
-stations to refuel.
+stations along the way.
+
+\underline{\textbf{Correctness}}
+
+\textbf{Lemma:} Suppose $A$ is a subset of an optimal solution where
+the latest refuel stop is station $g_k$. Let $g_i$ be the gas station
+after $g_k$ whose distance from $g_k$ is closest to $m$ but less than
+$m$. Then $A \cup \{g_i\}$ is also a subset of an optimal solution.
+
+\begin{proof}
+  Since $A$ is a subset of an optimal solution, let $A^*$ be an
+  optimal solution with $A \subseteq A^*$. Let $g_j$ be the gas station in
+  $A^* - A$ that is next to $g_k$. We have two cases:
+  \begin{itemize}
+  \item case-1: $i = j$. Then $A \cup \{g_i\} \subseteq A^*$, the lemma
+    holds. 
+  \item case-2: $i \neq j$. Since the distance from $g_k$ to $g_i$ is
+    closest to $m$ but less than $m$, this distance must be greater
+    than the distance from $g_k$ to $g_j$. Thus we can replace $g_j$
+    with $g_i$ and still yields an optimal solution since $g_i$ is
+    closer to the future stops than $g_j$.
+  \end{itemize}
+\end{proof}
+
+\textbf{Theorem:} $GreedyTripRefuel()$ finds an optimal solution.
+
+\begin{proof}
+  Initially, $A$ is an empty set, which is a subset of an
+  optimal solution and $g_k$ in this case would be city $A$. By the
+  lemma, $A \cup g_i$ is a subset of an optimal solution where $g_i$
+  is the gas station whose distance from city $A$ is closest to $m$
+  but less than $m$. 
+
+  By induction on the number of iterations, when the function
+  terminates, $A$ is a subset of an optimal solution. 
+
+  Since from the starting point, the greedy algorithm makes the least
+  possible stops, there is no better solution with fewer stops than
+  the one produced by the greedy algorithm. Therefore $A$ is optimal.
+\end{proof}
 
 \item % problem 3
 \item % problem 4
