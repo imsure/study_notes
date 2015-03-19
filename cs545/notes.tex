@@ -370,4 +370,35 @@ solution.
   $A$ is not properly contained by any solution. Thus $A$ is optimal. 
 \end{proof}
 
+\subsection{Proving correctness in general for greedy algorithm}
+
+When analyzing the correctness of a greedy algorithm, first prove a
+lemma of the following form:\\
+
+\underline{\textbf{Greedy Augmentation Lemma:}}\\
+Suppose $S$ is contained in an optimal solution. Let $S'$ be an
+augmentation of $S$ produced by one step of the greedy algorithm. Then
+$S'$ is also contained in the optimal solution.\\
+
+We can prove the lemma by \emph{exchange-style-argument:} if the
+optimal solution does not contain $S'$, then make an exchange between
+the augmented element in $S'$ and an element in the optimal solution
+to produce another optimal solution since it did not get worse.\\
+
+Notice that we need to define the containment relationship for the
+specific problem. It could be over set, or over string(substring,
+prefix, suffix, etc).\\
+
+Finally, the full correctness proof of a greedy algorithm will then
+consist of 4 steps:
+\begin{enumerate}
+\item argue the initial state (usually $\emptyset$) is contained in an
+  optimal solution.
+\item using induction on the number of augmentations of greedy
+  algorithm, use the lemma, argue that the output $S$ of the greedy
+  algorithm is contained in an optimal solution.
+\item show that there exists no optimal solution that can properly
+  contain $S$.
+\end{enumerate}
+
 \end{document}
