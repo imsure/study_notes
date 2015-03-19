@@ -1,0 +1,127 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% This is LaTeX file for Homework Assignment 3
+% Author: Shuo Yang
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,epsfig,graphics,hyperref,amsthm,mathtools}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+\hypersetup{colorlinks=true}
+
+\setlength{\textwidth}{7in}
+\setlength{\topmargin}{-0.575in}
+\setlength{\textheight}{9.25in}
+\setlength{\oddsidemargin}{-.25in}
+\setlength{\evensidemargin}{-.25in}
+
+\reversemarginpar
+\setlength{\marginparsep}{-15mm}
+
+\newcommand{\rmv}[1]{}
+\newcommand{\bemph}[1]{{\bfseries\itshape#1}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\imply}{\to}
+\newcommand{\bic}{\leftrightarrow}
+
+% Some user defined strings for the homework assignment
+%
+\def\CourseCode{CS545}
+\def\AssignmentNo{3}
+\def\DateHandedOut{Spring, 2015}
+\def\DateDue{March 26}
+\def\Author{Shuo Yang}
+
+\begin{document}
+
+\noindent
+
+\CourseCode \hfill \DateHandedOut
+
+\begin{center}
+Homework Assignment \#\AssignmentNo\\
+Due: \DateDue\\
+Student: \Author\\
+\end{center}
+
+% A horizontal split line
+\hrule\smallskip
+
+% Enumerate through all questions.
+\begin{enumerate}
+
+\item % Problem 1
+% Enumerate through all subquestions.
+\begin{enumerate} % nested enumeration
+\item Suppose we have 6 activities, for activity $i$, $s_i$ is the
+  start time, $f_i$ is the finish time and $d_i$ is the duration. 
+And we sort them in order of increasing duration:\\\\
+\begin{tabular}{ l | l l l l l l }
+  $i$ & 1 & 2 & 3 & 4 & 5 & 6\\ \hline
+  $s_i$ & 8 & 3 & 1 & 4 & 4 & 0\\
+  $f_i$ & 9 & 5 & 4 & 8 & 9 & 6\\
+  $d_i$ & 1 & 2 & 3 & 4 & 5 & 6\\
+\end{tabular}
+
+The greedy procedure when the activities are considered in order of
+increasing duration would be: 1) select activity 1 since it is the
+local best; 2) select activity 2 since it is compatible with activity
+1; 3) no other activities can be selected since they are not
+compatible with either activity 1 or 2. So the procedure yields the
+solution $\{1,2\}$, but the optimal solution should be
+$\{3,4,1\}$. Therefore the greedy procedure is not correct.
+
+\item With the same input, now let us sort them in order of increasing
+  start-time:\\
+
+\begin{tabular}{ l | l l l l l l }
+  $i$ & 1 & 2 & 3 & 4 & 5 & 6\\ \hline
+  $s_i$ & 0 & 1 & 3 & 4 & 4 & 8\\
+  $f_i$ & 6 & 4 & 5 & 8 & 9 & 9\\
+\end{tabular}
+
+The greedy procedure when the activities are considered in order of
+increasing duration is:
+
+\textbf{Function} $GreedyActivitySelection(S, F, n)$\\
+\-\hspace{3em} $A := \{1\}$ // activity with the earliest start time\\
+\-\hspace{3em} $j := 1$ // indicates the activity with greatest start time in $A$\\
+\-\hspace{3em} \textbf{for} $i := 2$ to $n$ \\
+\-\hspace{5em} \textbf{if} $S[i] \geq F[j]$ \\
+\-\hspace{7em} $A := A \cup \{i\}$ \\
+\-\hspace{7em} $j := i$ \\
+\-\hspace{3em} \textbf{return} $A$ \\
+
+Running the above procedure with the same input yields the solution
+$\{1,6\}$ which is certainly not an optimal solution. Therefore the
+greedy procedure is not correct.
+
+\item Consider the following 9 activities ordered by the number of
+  overlaps ($o_i$):\\
+
+\begin{tabular}{ l | l l l l l l l l l }
+  $i$ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9\\ \hline
+  $s_i$ & 4 & 0 & 7 & 1 & 2 & 3 & 5 & 6 & 6\\
+  $f_i$ & 6 & 3 & 10 & 4 & 4 & 5 & 7 & 8 & 9\\
+  $o_i$ & 2 & 2 & 2 & 3 & 3 & 3 & 3 & 3 & 3\\
+\end{tabular}
+
+When considering the order of increasing number of overlaps, the
+greedy procedure would first pick activity 1, then pick activity 2,
+and finally pick activity 3.
+Thus the solution derived by the greedy procedure is $\{1,2,3\}$, but the
+optimal solution should be $\{2,6,7,3\}$. Therefore the
+greedy procedure is not correct.
+
+\end{enumerate}
+
+\item % problem 2
+
+
+\item % problem 3
+\item % problem 4
+
+\end{enumerate}
+\end{document}
