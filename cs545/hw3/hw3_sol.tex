@@ -99,7 +99,7 @@ $\{1,6\}$ which is certainly not an optimal solution. Therefore the
 greedy procedure is not correct.
 
 \item Consider the following 9 activities ordered by the number of
-  overlaps ($o_i$):\\
+  overlaps which is denoted by $o_i$:\\
 
 \begin{tabular}{ l | l l l l l l l l l }
   $i$ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9\\ \hline
@@ -191,6 +191,130 @@ $m$. Then $A \cup \{g_i\}$ is also a subset of an optimal solution.
 \end{proof}
 
 \item % problem 3
+\underline{\textbf{Greedy algorithm}}
+
+Let the set of $n$ tasks be $\{a_i | 1 \leq i \leq n\}$.
+\begin{enumerate}
+\item Merge sort the $n$ tasks in the order of increasing execution time
+such that $t_1 \leq t_2 \leq \cdots \leq t_n$.
+\item Schedule the tasks in the order of $\{a_1,a_2,\cdots,a_n\}$.
+\end{enumerate}
+
+Step (a) takes $O(n\log n)$ time and step (b) takes $O(n)$ time, thus
+the overall runtime is $O(n\log n)$.
+
+\underline{\textbf{Correctness}}
+
+First, we define containment relationship.\\
+We define $\{a_1,a_2,\cdots,a_m\}$ as a schedule sequence such that $a_i$
+is scheduled after $a_{i-1}$ where $1 < i \leq m$.
+For a schedule sequence $\{a_1,a_2,\cdots,a_n\}$, we define
+$\{a_1,a_2,\cdots,a_k\}$ as a prefix-subsequence of it where $k \leq n$.
+
+\textbf{Lemma:} Suppose $A$ is a prefix-subsequence of an optimal schedule
+sequence. Let $a_i$ be the task that has the shortest execution time
+among those tasks that are not in $A$. Let $A'$ be the
+prefix-subsequence by appending $a_i$ to the end of $A$.
+Then $A'$ is also a prefix-subsequence of an optimal schedule sequence.
+
+\begin{proof}
+  Since $A$ is a prefix-subsequence of an optimal schedule sequence,
+  let $A^*$ be the optimal schedule sequence that contains $A$ as a
+  prefix-subsequence. Let $a_i$ be the task that has the shortest
+  execution time among those tasks in $A^*-A$. By appending $a_i$ to
+  the end of the $A$, we get another prefix-subsequence $A'$. There
+  are two cases:
+  \begin{enumerate}
+  \item $A'$ is a prefix-subsequence of $A^*$, the lemma holds.
+  \item $A'$ is not a prefix-subsequence of $A^*$, Let $a_j$ be the
+    task that appears first in the subsequence $A^*-A$. In
+    this case we must have: $t_i = t_j$. We prove this by 
+    contradiction:\\
+    Suppose $t_i \neq t_j$, since $a_i$ is the task with the shortest
+    execution time in $A^*-A$, we must have: $t_j > t_i$. Let the last
+    task in $A$ be $a_m$. Without loss of generality, assume $A^*-A$
+    is ordered as
+    $a_j,a_{x_1},\cdots,a_{x_s},a_i,a_{y_1},\cdots,a_{y_r}$ such that
+    there are $s$ tasks scheduled after $a_j$ and before $a_i$, and
+    there are $r$ tasks scheduled after $a_i$. Let $c_{x_k}$ denotes
+    the completion time for the tasks scheduled in between $a_j$ and
+    $a_i$, and let $c_{y_k}$ the completion time for the tasks
+    scheduled after $a_i$. We have:
+    \begin{align}
+      c_j &= c_m + t_j\\
+      c_{x_k} &= c_j + \sum_{1 \leq i \leq k}^{k \leq s}t_{x_i}\\
+      c_i &= c_j + \sum_{1 \leq i \leq s}t_{x_i} + t_i\\
+      c_{y_k} &= c_i + \sum_{1 \leq i \leq k}^{k \leq r}t_{y_i}
+    \end{align}
+
+    Now suppose we exchange the positions of $a_i$ and $a_j$ to
+    produce another subsequence $(A^*-A)'$\\
+    $a_i,a_{x_1},\cdots,a_{x_s},a_j,a_{y_1},\cdots,a_{y_r}$ and
+    together with $A$, this produces another schedule sequence $A^{*'}$. In this
+    case, let $c_j'$ be the completion time for $a_j$, $c_i'$ be the
+    completion time for $a_i$, $c_{x_k}'$ be
+    the completion time for the tasks scheduled in between $a_j$ and
+    $a_i$, and let $c_{y_k}'$ be the completion time for the tasks
+    scheduled after $a_j$. We have:
+    \begin{align}
+      c_i' &= c_m + t_i\\
+      c_{x_k}' &= c_i' + \sum_{1 \leq i \leq k}^{k \leq s}t_{x_i}\\
+      c_j' &= c_i' + \sum_{1 \leq i \leq s}t_{x_i} + t_j\\
+      c_{y_k}' &= c_j' + \sum_{1 \leq i \leq k}^{k \leq r}t_{y_i}
+    \end{align}
+    
+    Now we compare completion times for the two subsequences:
+    \begin{align}
+      c_j - c_i' &= (c_m + t_j) - (c_m + t_i)\\
+      &= t_j - t_i\\
+      &> 0\\
+      c_{x_k} - c_{x_k}' &= (c_j + \sum_{1 \leq i \leq k}^{k \leq
+        s}t_{x_i}) - (c_i' + \sum_{1 \leq i \leq k}^{k \leq
+        s}t_{x_i})\\ 
+      &= c_j - c_i'\\
+      &> 0\\
+      c_i - c_j' &= (c_j + \sum_{1 \leq i \leq s}t_{x_i} + t_i) -
+      (c_i' + \sum_{1 \leq i \leq s}t_{x_i} + t_j)\\ 
+      &= c_j - c_i' + t_i - t_j\\
+      &= t_j - t_i' + t_i - t_j\\
+      &= 0\\
+      c_{y_k} - c_{y_k}' &= (c_i + \sum_{1 \leq i \leq k}^{k \leq
+        r}t_{y_i}) - (c_j' + \sum_{1 \leq i \leq k}^{k \leq
+        r}t_{y_i})\\
+      &= c_i - c_j'\\
+      &= 0
+    \end{align}
+    Therefore, the sum of the completion time for $A^*-A$ is
+    absolutely greater than the sum of the completion time for
+    $(A^*-A)'$. So the average completion time of $A^*$ must be greater
+    than that of $A^{*'}$, we have found a better solution than
+    $A^*$. This contradicts the fact that $A^*$ is an optimal
+    solution. Thus we must have $t_i = t_j$. 
+
+    So we can get another optimal schedule sequence by exchanging the order of
+    $a_i$ and $a_j$ because since $t_i = t_j$, the exchange will not
+    affect the overall average completion time. And this new optimal
+    schedule sequence has $A'$ as a prefix-subsequence. The lemma
+    still holds.
+  \end{enumerate}
+\end{proof}
+
+\textbf{Theorem:} The greedy algorithm finds an optimal schedule sequence.
+
+\begin{proof}
+  Initially, $A$ is a empty sequence, which is always a
+  prefix-subsequence of any schedule sequence. Suppose all $n$ tasks
+  $a_1,a_2,\cdots,a_n$ have been sorted in the order of increasing
+  execution time. By the lemma, $\{a_1\}$ is a prefix-subsequence of
+  an optimal schedule sequence. 
+  
+  By induction on the number of iterations, when the algorithm
+  terminates, $A$ is still a prefix-subsequence of an optimal schedule
+  sequence. And when the algorithm terminates, $A$ would contain all
+  $n$ tasks, no other schedule sequence can properly contain $A$, thus
+  $A$ is the optimal schedule sequence.
+\end{proof}
+
 \item % problem 4
 
 \end{enumerate}
