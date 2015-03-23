@@ -317,6 +317,160 @@ Then $A'$ is also a prefix-subsequence of an optimal schedule sequence.
 \end{proof}
 
 \item % problem 4
+\begin{enumerate}
+\item \underline{\textbf{Greedy algorithm}}
+
+The greedy strategy is to always choose the largest denomination that
+is not greater than the remaining amount.
+
+The function $GreedyCoinChange(n)$ implements this strategy.
+
+\textbf{Function} $GreedyCoinChange(n)$\\
+\-\hspace{3em} $A := \emptyset$ // the set of choose coins \\
+\-\hspace{3em} $denominations := \{25,10,5,1\}$ // set of
+available denominations \\
+\-\hspace{3em} \textbf{while} $n > 0$\\
+\-\hspace{5em} $x := $ the largest value in $denominations$ that is
+$\leq n$ \\
+\-\hspace{5em} $A := A \cup \{x\}$ // pick $x$\\
+\-\hspace{5em} $n := n - x$\\
+\-\hspace{3em} \textbf{return} $A$\\
+
+The runtime of the algorithm is $O(n)$.
+
+\underline{\textbf{Correctness}}
+
+First, we make the following claims:
+\begin{itemize}
+\item Claim-1: There cannot be more than 4 pennies in an optimal
+  solution because 5 pennies can be replaced by 1 nickle which yields
+  a better solution with 4 coins less.
+\item Claim-2: There cannot be more than 1 nickle in an optimal
+  solution because 2 nickles can be replaced by 1 dime which yields
+  a better solution with 1 coin less.
+\item Claim-3: There cannot be more than 2 dimes in an optimal
+  solution because 3 dimes can be replaced by 1 quarter and 1 nickle
+  which yield a better solution with 1 coin less.
+\item Claim-4: There cannot be 2 dimes and 1 nickle both in an optimal
+  solution because 2 dimes and 1 nickle can be replaced by 1 quarter
+  which yield a better solution with 2 coins less.
+\end{itemize}
+
+\textbf{Lemma:} Suppose $A$ is a subset of an optimal solution $A^*$.
+Let $m$ be the amount of the remaining cents, that is, total cents in $A^*-A$.
+Let $x$ be the largest value among $\{25,10,5,1\}$ that is not greater
+than $m$. Then $A' = A \cup \{x\}$ is also a subset of an optimal solution.
+
+\begin{proof}
+  We prove by cases. There are total 4 cases.
+\begin{itemize}
+\item Case-1: x = 25.\\
+  In this case, we have $m \geq 25$. If $x \in A^*-A$, the lemma
+  holds. If $x \notin A^*-A$, then $A^*-A$ cannot contain quarters. We
+  have two sub-cases: 1) $25 \leq m < 30$, then the best possible solution is to
+  pick 2 dimes and 1 nickle, and $m-25$ pennies. But this violates the
+  \emph{Claim-4}; 2) $m \geq 30$, then the best possible solution must contain at
+  least 3 dimes, but this violates the \emph{Claim-3}. Since in both
+  sub-cases, the best possible solutions violate some claims, we know
+  that they must not be subset of an optimal solution. Therefore $x$
+  must be in $A^*-A$, the lemma holds.
+\item Case-2: x = 10.\\
+  In this case, we have $10 \leq m < 25$. If $x \in A^*-A$, the lemma
+  holds. If $x \notin A^*-A$, then $A^*-A$ cannot contain quarters and
+  dimes. The best possible solution is to pick at least 2 nickles, but
+  this violates the \emph{Claim-2}. So $x$ must be in $A^*-A$, the
+  lemma holds. 
+\item Case-3: x = 5.\\
+  In this case, we have $5 \leq m < 10$. If $x \in A^*-A$, the lemma
+  holds. If $x \notin A^*-A$, then $A^*-A$ cannot contain quarters,
+  dimes and nickles. The best possible solution is to pick $m$
+  pennies, but this violates the \emph{Claim-1}. So $x$ must be in
+  $A^*-A$, the lemma holds.
+\item Case-4: x = 1.\\
+  In this case, we have $1 \leq m < 5$ and $x$ must be in
+  $A^*-A$ because pennies are the only choices, thus the lemma holds.
+\end{itemize}
+Since for all 4 cases, the lemma holds, it must be true.
+\end{proof}
+
+\underline{\textbf{Theorem:}} Greedy algorithm $GreedyCoinChange$
+finds an optimal solution.
+
+\begin{proof}
+  Initially, $A$ is an empty set which is always a subset of any
+  optimal solutions.By the lemma, $\{x\}$ is a subset of an optimal
+  solution where $x$ is the largest denomination that is not greater
+  than $n$. By induction on the number of iterations, when 
+  the algorithm terminates, $A$ is still a subset of an optimal
+  solution. When the algorithm terminates, $A$ would contain coins
+  with the total amount equals $n$ and satisfy the 4 claims, thus no
+  other solutions can properly contain $A$, thus $A$ is optimal.
+\end{proof}
+
+\item % part-b
+  \begin{proof}
+    prove by giving an counter example. Suppose the denomination system
+    is the set: $\{1,3,4\}$ and $n=6$. The greedy algorithm
+    $GreedyCoinChange$ yields the solution $\{4,1,1\}$. But the optimal
+    solution is $\{3,3\}$. This proves that greedy algorithm from Part
+    (a) does not make optimal change for all systems of coins.
+  \end{proof}
+
+\item % part-c
+  \underline{\textbf{Lemma:}} There cannot be more than $(a-1)$
+  coins with the value $a^i$ in an optimal solution where $0
+  \leq i < k$.
+
+  \begin{proof}
+    Prove by contradiction. Suppose there is an optimal solution that
+    contains more than $(a-1)$ coins of the value $a^i$ for
+    some $i$ where $0 \leq i < k$. But $a$ coins of the value $a^i$
+    can be replaced with 1 coin with the value of $a^{i+1}$. This
+    yields a better solution with $a-1$ coins less since $a > 1$. This
+    is a contradiction. Therefore the lemma must always hold.
+  \end{proof}
+
+  \underline{\textbf{Theorem:}} The greedy algorithm in part-a makes optimal
+  change for the system of coins with denominations
+  $\{a^0,a^1,\cdots,a^k\}$ where $a>1$ and $k \geq 1$.
+
+  \begin{proof}
+    Prove by contradiction.\\
+    Let $A$ be the solution found by the greedy
+    algorithm. Suppose $A$ is not optimal, then let $A'$ be an
+    optimal solution. Define $C = \{c_i | 0 \leq i \leq k\}$ as the set
+    of coin counts for $A$ where $c_i$ is the number of coins with the
+    value of $a^i$ in $A$. And define $C' = \{c_i' | 0 \leq i \leq k\}$ as the set
+    of coin counts for $A'$ where $c_i'$ is the number of coins with the
+    value of $a^i$ in $A'$. 
+
+    Let $j$ be the first highest index for which $c_j \neq c_j'$. Then
+    we must have: $c_j > c_j'$ because our algorithm makes greedy
+    choices locally and picks as much $a^j$ as possible and this is
+    the first value on which they disagree. Also $j > 0$ because if
+    only $c_0$ and $c_0'$ are different, then the total amount in $A$
+    and $A'$ would be different. 
+
+    Since $c_j > c_j'$ and $c_j' \geq 0$, the partial amount
+    $B=\sum_{i=0}^{j-1} c_i' a^i$ in $A'$ must satisfy the condition
+    that $B \geq a^j$.
+
+    Also, by the lemma, the largest possible value for the partial
+    amount $B$ is:
+    \begin{align}
+      \sum_{i=0}^{j-1} c_i' a^i &= (a-1)a^0 + (a-1)a^1 + \cdots +
+      (a-1)a^{j-1}\\
+      &= (a-1)\sum_{i=0}^{j-1} a^i\\
+      &= (a-1)\frac{1-a^j}{1-a}\\
+      &= a^j - 1\\
+      &< a^j
+    \end{align}
+
+    This contradicts the fact that $B \geq a^j$. Thus $A$ must be an
+    optimal solution.    
+  \end{proof}
+
+\end{enumerate}
 
 \end{enumerate}
 \end{document}
