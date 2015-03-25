@@ -339,32 +339,27 @@ Assume that the heap has the following operations:
   otherwise return false.\\
 \end{itemize}
 
-The routine $InsertHeap(heap, A, R, T, r)$ is used to insert tasks
-with release time of $r$ into the min-heap where $A$ is the set of
-tasks, $R$ is the set of release time and $T$ is the set of execution
-time. 
-
-\textbf{Function} $InsertHeap(heap, A, R, T, r)$\\
-\-\hspace{3em} \textbf{for} $i := 1$ to $n$\\
-\-\hspace{5em} \textbf{if} $r_i == r$\\
-\-\hspace{7em} $heap.insert(a_i, t_i)$\\
-\-\hspace{7em} $A := A - \{a_i\}$\\
-\-\hspace{7em} $R := R - \{r_i\}$\\
-
-$min(R)$ is used to find the minimum release time from
-$R$.\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-The scheduling algorithm is implemented as follows:\\
+Let $A$ be the set of $n$ tasks: $\{a_i | 1 \leq i \leq n\}$, $T$ be
+the set of execution times: $\{t_i | 1 \leq i \leq n\}$, and $R$ be the 
+set of release times: $\{r_i | 1 \leq i \leq n\}$. The scheduling
+algorithm is implemented as
+follows:\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 \textbf{Function} $ScheduleTasks(heap, A, R, T, r)$\\
+\-\hspace{2em} sort tasks in the order of increasing releasing time
+using quick sort\\
 \-\hspace{2em} $S := \emptyset$ // set of scheduled tasks\\
-\-\hspace{2em} $minr_1 := min(R)$ // start time for the next
-scheduled task $a$\\
-\-\hspace{2em} $InsertHeap(heap, A, R, T, minr_1)$\\
-\-\hspace{2em} $(a,r) := heap.pop()$\\
-\-\hspace{2em} $S := S \cup \{a\}$ // schedule task $a$\\\\
-\-\hspace{2em} \textbf{while} $R \neq \emptyset$\\
-\-\hspace{4em} $minr_2 := min(R)$ // next release time\\
+\-\hspace{2em} $i := 1$ \\
+\-\hspace{2em} $minr_1 := r_i$ // start time for the next scheduled task\\
+\-\hspace{2em} $heap.insert(a_i,t_i)$ \\
+\-\hspace{2em} \textbf{while} $r_{i+1} == r_i$\\
+\-\hspace{4em} $i := i + 1$ \\
+\-\hspace{4em} $heap.insert(a_i,t_i)$ \\
+\-\hspace{2em} $i := i + 1$ \\
+\-\hspace{2em} \textbf{while} $i \leq n$\\
+\-\hspace{4em} $minr_2 := r_i$ // next release time\\
+\-\hspace{4em} $(a,r) := heap.pop()$\\
+\-\hspace{4em} $S := S \cup \{a\}$ // schedule task $a$\\
 \-\hspace{4em} \textbf{if} $minr_2 - minr_1 \geq r$ //task $a$ can
 finish before the next batch of released tasks\\
 \-\hspace{6em} $minr_1 := minr_1 + r$ // update the start time for the
@@ -374,7 +369,11 @@ before next batch of release \\
 \-\hspace{6em} $S := S \cup \{a\}$\\
 \-\hspace{4em} \textbf{else} // task $a$ runs for $(minr_2-minr_1)$
 time, then the next batch of release comes\\
-\-\hspace{6em} $InsertHeap(heap, A, R, T, minr_2)$\\
+\-\hspace{6em} $heap.insert(a_i,t_i)$ \\
+\-\hspace{6em} \textbf{while} $r_{i+1} == r_i$\\
+\-\hspace{8em} $i := i + 1$ \\
+\-\hspace{8em} $heap.insert(a_i,t_i)$ \\
+\-\hspace{6em} $i := i + 1$ \\
 \-\hspace{6em} $(a',r') := heap.findmin()$\\
 \-\hspace{6em} $r := r - (minr_2 - minr_1)$ // update the remaining
 time for task $a$\\
@@ -390,6 +389,12 @@ smallest remaining time\\
 release\\
 \-\hspace{4em} $(a,r) := heap.pop()$\\
 \-\hspace{4em} $S := S \cup \{a\}$\\
+
+\underline{\textbf{Runtime}}
+
+Quick sort takes $O(n\log n)$ time, $heap.insert()$ takes $O(\log n)$
+time, the algorithm makes $O(n)$ heap insertions, and all the other
+operations take constant time. So the total run time is $O(n\log n)$.
 
 \end{enumerate}
 
