@@ -405,6 +405,50 @@ n)$.\\
 The third outer-most \textbf{while} loop also takes $O(n\log n)$ time;\\
 Thus the total run time of the algorithm is $O(n\log n)$.
 
+\underline{\textbf{Correctness}}
+
+\textbf{Theorem:} Shortest-remaining-time-first schedule is optimal.
+
+\begin{proof}
+  Prove by contradiction.\\
+  Assume that Shortest-remaining-time-first schedule is not
+  optimal, then there exists an optimal schedule $S$ that does not use
+  shortest-remaining-time-first policy.\\
+  Suppose at time $t$, instead of scheduling task $i$ with the
+  shortest-remaining-time at the time being, $S$ schedules task $k$
+  with longer remaining-time. Let $R_i$ and $R_j$ be the remaining
+  time for tasks $i$ and $j$, and $C_i$ and $C_j$ be the completion
+  time for tasks $i$ and $j$. We have: $R_i < R_j$. In total, $R_i + 
+  R_j$ is spent on tasks $i$ and $j$ after time $t$. We assume that
+  $C_i < C_j$. 
+
+  We can get another schedule $S'$ by interchanging schedule sequence
+  of tasks $i$ and $j$:
+  \begin{enumerate}
+  \item devote the first $R_i$ units of time that were distributed to
+    either task $i$ or $j$ after $t$ completely to task $i$ until its
+    completion. 
+  \item devote the remaining $R_j$ units of time for task $j$ since
+    task $i$ has completed.
+  \end{enumerate}
+  The two schedules are shown in the figure below.\\
+  \includegraphics[width=12cm,height=8cm]{../imgs/SRTF-schedule.png}
+
+  Let $C_i'$ and $C_j'$ be the completion time for tasks $i$ and $j$
+  in the new schedule $S'$.
+
+  By doing this interchanging, we get a better solution, because:
+  \begin{align}
+    C_i &> C_i'\\
+    C_j &= C_j'
+  \end{align}
+  Since in the new schedule, other tasks other than task $i$ have the
+  same completion time as before, thus the total sum of completion of
+  the new schedule $S'$ is less than that of $S$. This contradicts the
+  fact that $S'$ is optimal. Thus shortest-remaining-time-first
+  schedule is optimal. 
+\end{proof}
+
 \end{enumerate}
 
 \item % problem 4
@@ -414,7 +458,7 @@ Thus the total run time of the algorithm is $O(n\log n)$.
 The greedy strategy is to always choose the largest denomination that
 is not greater than the remaining amount.
 
-The function $GreedyCoinChange(n)$ implements this strategy.
+The function $GreedyCoinChange(n)$ implements this strategy.\\\\\\
 
 \textbf{Function} $GreedyCoinChange(n)$\\
 \-\hspace{3em} $A := \emptyset$ // the set of choose coins \\
