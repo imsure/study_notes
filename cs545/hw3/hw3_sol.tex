@@ -345,7 +345,7 @@ set of release times: $\{r_i | 1 \leq i \leq n\}$. The scheduling
 algorithm is implemented as
 follows:\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-\textbf{Function} $ScheduleTasks(heap, A, R, T, r)$\\
+\textbf{Function} $SRTFschedule(heap, A, R, T, r)$\\
 \-\hspace{2em} sort tasks in the order of increasing releasing time
 using quick sort\\
 \-\hspace{2em} $S := \emptyset$ // set of scheduled tasks\\
@@ -392,9 +392,18 @@ release\\
 
 \underline{\textbf{Runtime}}
 
-Quick sort takes $O(n\log n)$ time, $heap.insert()$ takes $O(\log n)$
-time, the algorithm makes $O(n)$ heap insertions, and all the other
-operations take constant time. So the total run time is $O(n\log n)$.
+Quick sort takes $O(n\log n)$ time;\\
+$heap.insert()$ and $heap.pop()$ take $O(\log n)$ time;\\
+$heap.findmain()$ takes $O(1)$ time;\\
+The first outer-most \textbf{while} loop takes $O(n\log n)$ time;\\
+The second outer-most \textbf{while} loop takes $O(n\log n)$ time;
+note that although there is another \textbf{while} loop inside the
+outer-loop, this inner-loop will increment the value of $i$
+which decrement the number of iterations of the outer-loop, thus the
+amortized cost for each iteration of outer-loop is still $O(\log
+n)$.\\
+The third outer-most \textbf{while} loop also takes $O(n\log n)$ time;\\
+Thus the total run time of the algorithm is $O(n\log n)$.
 
 \end{enumerate}
 
