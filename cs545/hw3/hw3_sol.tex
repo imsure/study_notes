@@ -191,6 +191,8 @@ $m$. Then $A \cup \{g_i\}$ is also a subset of an optimal solution.
 \end{proof}
 
 \item % problem 3
+\begin{enumerate}
+\item % part-a
 \underline{\textbf{Greedy algorithm}}
 
 Let the set of $n$ tasks be $\{a_i | 1 \leq i \leq n\}$. The greedy
@@ -315,6 +317,81 @@ Then $A'$ is also a prefix-subsequence of an optimal schedule sequence.
   $n$ tasks, no other schedule sequence can properly contain $A$, thus
   $A$ is the optimal schedule sequence.
 \end{proof}
+
+\item % part-b
+
+\underline{\textbf{Algorithm}}
+
+The algorithm will use the shortest-remaining-time policy to find an
+optimal schedule. It uses a min-heap to organize the released but not
+completed tasks where heap ordering is based on their remaining
+execution times. A scheduling decision is made when a task is
+completed or when a new task is released.\\
+
+Assume that the heap has the following operations:
+\begin{itemize}
+\item $heap.insert(a,r)$: insert task $a$ with the remaining time $r$.
+\item $heap.pop()$: remove the task $a$ with the smallest remaining
+  time $r$ and return the pair $(a,r)$.
+\item $heap.findmin()$: find the task $a$ with the smallest remaining
+  time $r$ and return the pair $(a,r)$.
+\item $heap.notempty()$: return true if the heap is not empty,
+  otherwise return false.\\
+\end{itemize}
+
+The routine $InsertHeap(heap, A, R, T, r)$ is used to insert tasks
+with release time of $r$ into the min-heap where $A$ is the set of
+tasks, $R$ is the set of release time and $T$ is the set of execution
+time. 
+
+\textbf{Function} $InsertHeap(heap, A, R, T, r)$\\
+\-\hspace{3em} \textbf{for} $i := 1$ to $n$\\
+\-\hspace{5em} \textbf{if} $r_i == r$\\
+\-\hspace{7em} $heap.insert(a_i, t_i)$\\
+\-\hspace{7em} $A := A - \{a_i\}$\\
+\-\hspace{7em} $R := R - \{r_i\}$\\
+
+$min(R)$ is used to find the minimum release time from
+$R$.\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+The scheduling algorithm is implemented as follows:\\
+
+\textbf{Function} $ScheduleTasks(heap, A, R, T, r)$\\
+\-\hspace{2em} $S := \emptyset$ // set of scheduled tasks\\
+\-\hspace{2em} $minr_1 := min(R)$ // start time for the next
+scheduled task $a$\\
+\-\hspace{2em} $InsertHeap(heap, A, R, T, minr_1)$\\
+\-\hspace{2em} $(a,r) := heap.pop()$\\
+\-\hspace{2em} $S := S \cup \{a\}$ // schedule task $a$\\\\
+\-\hspace{2em} \textbf{while} $R \neq \emptyset$\\
+\-\hspace{4em} $minr_2 := min(R)$ // next release time\\
+\-\hspace{4em} \textbf{if} $minr_2 - minr_1 \geq r$ //task $a$ can
+finish before the next batch of released tasks\\
+\-\hspace{6em} $minr_1 := minr_1 + r$ // update the start time for the
+next scheduled task\\
+\-\hspace{6em} $(a,r) = heap.pop()$ // schedule the next task on heap
+before next batch of release \\
+\-\hspace{6em} $S := S \cup \{a\}$\\
+\-\hspace{4em} \textbf{else} // task $a$ runs for $(minr_2-minr_1)$
+time, then the next batch of release comes\\
+\-\hspace{6em} $InsertHeap(heap, A, R, T, minr_2)$\\
+\-\hspace{6em} $(a',r') := heap.findmin()$\\
+\-\hspace{6em} $r := r - (minr_2 - minr_1)$ // update the remaining
+time for task $a$\\
+\-\hspace{6em} $minr_1 = minr_2$ // update $minr_1$\\
+\-\hspace{6em} \textbf{if} $r' \geq r$ // continue to run task $a$\\
+\-\hspace{8em} \textbf{continue}\\
+\-\hspace{6em} \textbf{else} // current running task $a$ is preempted\\
+\-\hspace{8em} $heap.insert(a,r)$ // put task $a$ back to the heap\\
+\-\hspace{8em} $(a,r) := heap.pop()$ // schedule the task with the
+smallest remaining time\\
+\-\hspace{8em} $S := S \cup \{a\}$\\\\
+\-\hspace{2em} \textbf{while} heap.notempty() // no more tasks to
+release\\
+\-\hspace{4em} $(a,r) := heap.pop()$\\
+\-\hspace{4em} $S := S \cup \{a\}$\\
+
+\end{enumerate}
 
 \item % problem 4
 \begin{enumerate}
@@ -469,6 +546,46 @@ finds an optimal solution.
     This contradicts the fact that $B \geq a^j$. Thus $A$ must be an
     optimal solution.    
   \end{proof}
+
+\item % part-d
+
+  \underline{\textbf{Recursive structure of an optimal change}}
+
+  Give a set of denomination $D = \{d_1,d_2,\cdots,d_k\}$ where $d_1 =
+  1$ and an amount of cents $n$, an optimal change must start with one
+  of coins in $D$, say it is 
+  $d_i$ where $1 \leq i \leq k$. Then the optimal change must be $1+$
+  (optimal change for $n-d_i$).
+
+  \underline{\textbf{Recurrence equation}}
+
+  Define $C(i)$ be the optimal number of changes made for amount of $i$
+  cents. The goal value is $C(n)$.
+  \begin{equation}
+    C(i) := \begin{cases}
+      \min\limits_{1 \leq j \leq k}(C(i-d_j)) + 1 \-\hspace{2em} i > 0\\
+      0 \-\hspace{10.5em} i = 0\\
+      \infty \-\hspace{10em} i < 0
+    \end{cases}
+  \end{equation}
+
+  \underline{\textbf{Evaluate the recurrence equation}}
+
+  We fill the table up from $C(0)$ until $C(n)$.
+
+  The size of table is $O(n)$ and to fill each cell, we need $O(k)$
+  comparison, so the total run time of filling the table is $O(kn)$.
+
+  \underline{\textbf{Recover the optimal solution}}
+
+  For the optimal number of coins, we simply look up the value of
+  $C(n)$. 
+
+  For the number of each denomination in the optimal solution, we can
+  trace back to see how many coins are needed to make change for
+  $(n-d_i)$ cents for each $i$ where $1 \leq i \leq k$, and choose the
+  smallest number. Repeat this process until the remaining amount
+  is $\leq$ 0.
 
 \end{enumerate}
 
