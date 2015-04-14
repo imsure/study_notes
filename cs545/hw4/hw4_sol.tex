@@ -201,5 +201,74 @@ of credit is always non-negative. Thus, for any sequence of $n$
 $Insert$ and $DeleteLargerHalf$ operations, the total amortized cost
 is an upper bound on the total actual cost. 
 
+\item % problem 3
+  Let $D_i$ be the heap with $n_i$ elements after the $i$th
+  operation. Since both $Extract$ and $Insert$ take $O(\lg n)$ time,
+  let $k$ be some positive constant such that both operations take at most
+  $k\lg n$, where $n = max(n_i, n_{i-1}$. So now we can use $k\lg n$
+  to measure the real time of each operation.
+
+  We define the potential function be:
+  \begin{align}
+    \Phi(D_i) &= \sum_{x \in D_i} (1 + k \cdot depth_i(x))\\
+    &= n_i + k\sum_{x \in D_i} depth_i(x)
+  \end{align}
+  where $depth_i(x)$ is the depth (the number of edges from the root
+  to the node) of element $x$ in $D_i$.
+
+  Initially, the heap is empty, so $\Phi(D_0) = 0$. And since $k$ is
+  postive and $depth_i(x)$ is non-negative, we always have $\Phi(D_i)
+  \geq 0$. 
+
+  Suppose the $i$th operation is $Extract$, the change of potential is:
+  \begin{align}
+    \Delta\Phi &= \Phi(D_i) - \Phi(D_{i-1})\\
+    &= (n_i + k\sum_{x \in D_i} depth_i(x)) - (n_{i-1} + k\sum_{x \in
+      D_{i-1}} depth_{i-1}(x)) \\
+    &= (n_i - n_{i-1}) + k(\sum_{x \in D_i}depth_i(x) - \sum_{x \in
+      D_{i-1}}depth_{i-1}(x))\\
+    &= -1 + k(-\lg n_{i-1})\\
+    &= -1 - k\lg n_{i-1}
+  \end{align}
+  since the size of heap after $Extract$ drops by 1 and the sum of
+  depth of all elements in $D_i$ drops by the depth of the last
+  element in $D_{i-1}$, which is $\lg n_{i-1}$, so the potential
+  decreases by $(1 + k\lg n_{i-1})$. 
+  
+  So, the amortized time for $Extract$ is:
+  \begin{align}
+    a_i &= t_i + \Delta\Phi\\
+    &\leq k\lg n_{i-1} + (-1 - k\lg n_{i-1})\\
+    &\leq k\lg n_{i-1} -1 - k\lg n_{i-1}\\
+    &\leq -1\\
+    &= O(1)
+  \end{align}
+  since the actual time takes for $Extract$ is at most $k\lg n_{i-1}$
+  because $n_{i-1} > n_i$, thus the amortized time is $O(1)$.
+
+  Suppose the $i$th operation is $Insert$, the change of potential is:
+  \begin{align}
+    \Delta\Phi &= \Phi(D_i) - \Phi(D_{i-1})\\
+    &= (n_i + k\sum_{x \in D_i} depth_i(x)) - (n_{i-1} + k\sum_{x \in
+      D_{i-1}} depth_{i-1}(x)) \\
+    &= (n_i - n_{i-1}) + k(\sum_{x \in D_i}depth_i(x) - \sum_{x \in
+      D_{i-1}}depth_{i-1}(x))\\
+    &= 1 + k\lg n_i
+  \end{align}
+  since the size of heap after $Insert$ increases by 1 and the sum of
+  depth of all elements in $D_i$ increases by the depth of the last
+  element in $D_i$, which is $\lg n_i$, so the potential
+  increases by $(1 + k\lg n_i)$.
+  
+  So, the amortized time for $Insert$ is:
+  \begin{align}
+    a_i &= t_i + \Delta\Phi\\
+    &\leq k\lg n_i + (1 + k\lg n_i)\\
+    &\leq 1 + 2k\lg n_i\\
+    &= O(\lg n)
+  \end{align}
+  since the actual time takes for $Insert$ is at most $k\lg n_i$
+  because $n_i > n_{i-1}$, thus the amortized time is $O(\lg n)$.
+
 \end{enumerate}
 \end{document}
